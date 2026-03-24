@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # 推荐使用 Node 18 或 20，避免版本过旧导致依赖安装失败
+          node-version: '24' # 推荐使用 Node 18 或 20，避免版本过旧导致依赖安装失败
 
       - name: Install Dependencies 📦
         run: npm install     # 【关键步骤】这一步会安装 hexo 到 node_modules，之后才能运行 hexo 命令
