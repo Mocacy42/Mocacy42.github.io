@@ -1,0 +1,40 @@
+name: Deploy Hexo to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master  # 如果你的本地源码主分支叫 main，请改为 main
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+        with:
+          submodules: true  # 如果你使用了 git 子模块主题，需要开启
+          fetch-depth: 0    # 获取所有提交历史，方便生成日期等信息
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # 根据你的需求调整节点版本，18或20通常比较稳
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Generate Static Files
+        run: hexo generate
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          # 如果仓库名是 用户名.github.io，通常不需要设置 publish_branch，默认就是 gh-pages 或 main
+          # 但为了保险，如果是用户主页仓库，我们通常希望推送到 main 分支
+          # 下面这行是关键：对于用户名.github.io 仓库，我们需要推送到 main 分支
+          publish_branch: main 
+          user_name: Mocacy42
+          user_email: 2735749050@qq.com # 可以改成你的真实邮箱
