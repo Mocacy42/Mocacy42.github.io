@@ -19,21 +19,26 @@
   <meta name="author" content="MKY42">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这是关于页面">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="https://mocacy42.github.io/about/index.html">
+    <meta name="description" content="纹理是什么？  储存数据的容器，常见二维纹理（如图片）RGB可以使用UV二维坐标获取四维RGBA的值。纹理可以存储颜色信息如RGB值，或者也可以存储任意三维的信息如法线、切线。  纹理管线的流程：   标准纹理管线流程包括 模型空间&#x3D;&gt;投影函数&#x3D;&gt;纹理映射&#x3D;&gt;通讯函数&#x3D;&gt;新的纹理坐标&#x3D;&gt;纹理采样&#x3D;&gt;纹理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术美术百人计划-1.3纹理基础">
+<meta property="og:url" content="https://mocacy42.github.io/2026/03/24/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="MKY42">
-<meta property="og:description" content="这是关于页面">
+<meta property="og:description" content="纹理是什么？  储存数据的容器，常见二维纹理（如图片）RGB可以使用UV二维坐标获取四维RGBA的值。纹理可以存储颜色信息如RGB值，或者也可以存储任意三维的信息如法线、切线。  纹理管线的流程：   标准纹理管线流程包括 模型空间&#x3D;&gt;投影函数&#x3D;&gt;纹理映射&#x3D;&gt;通讯函数&#x3D;&gt;新的纹理坐标&#x3D;&gt;纹理采样&#x3D;&gt;纹理">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-03-24T06:07:18.518Z">
-<meta property="article:modified_time" content="2026-03-24T06:07:18.518Z">
+<meta property="og:image" content="https://mocacy42.github.io/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731043537367.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731044003452.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731044351600.png">
+<meta property="article:published_time" content="2026-03-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-24T06:44:36.552Z">
 <meta property="article:author" content="MKY42">
+<meta property="article:tag" content="Unity">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mocacy42.github.io/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731043537367.png">
   
   
   
-  <title>关于 - MKY42</title>
+  <title>技术美术百人计划-1.3纹理基础 - MKY42</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -93,7 +98,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 60vh;">
+<div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -302,9 +307,49 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="关于"></span>
+            <span id="subtitle" data-typed-text="技术美术百人计划-1.3纹理基础"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-24 00:00" pubdate>
+          2026年3月24日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          515 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          5 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
 
         
       </div>
@@ -322,62 +367,196 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div id="board"
-          >
-          
-            <div class="about-avatar">
-              <img src="/img/mky42.png" srcset="/img/loading.gif" lazyload class="img-fluid" alt="avatar">
-            </div>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-<div class="text-center">
-  <div class="about-info">
-    <div class="about-name">Mocacy42</div>
-    <div class="about-intro">记录学习与生活</div>
-    <div class="about-icons">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
       
-        
-        
-        
-        <a href=https://github.com/Mocacy42 class="
-           hint--bottom hint--rounded"
-           aria-label="GitHub"
-           target="_blank"
-        >
-          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
-          
-        </a>
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">技术美术百人计划-1.3纹理基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>纹理是什么？</p>
+<ul>
+<li>储存数据的容器，常见二维纹理（如图片）RGB可以使用UV二维坐标获取四维RGBA的值。纹理可以存储颜色信息如RGB值，或者也可以存储任意三维的信息如法线、切线。</li>
+</ul>
+<p>纹理管线的流程：</p>
+<p><img src="/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731043537367.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>标准纹理管线流程包括 模型空间&#x3D;&gt;投影函数&#x3D;&gt;纹理映射&#x3D;&gt;通讯函数&#x3D;&gt;新的纹理坐标&#x3D;&gt;纹理采样&#x3D;&gt;纹理值</li>
+<li>一般纹理采样中与UV偏移相关的代码应该放在顶点着色器中，避免依赖纹理读取（即：在片元着色器中计算UV偏移）产生更高的性能消耗。</li>
+</ul>
+<p>纹理类型：</p>
+<ul>
+<li>二维UV纹理</li>
+<li>Cube环境纹理</li>
+</ul>
+<p>纹理采样设置——Wrap Mode</p>
+<p><img src="/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731044003452.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>Wrap Mode决定了UV值在[ 0 , 1 ]之外范围的表现，在OpenGL中又称“包装模式”（Wrapping Mode）;在DirectX中称为“纹理寻址模式”（Texture Addressing Mode）。</li>
+</ul>
+<p>纹理采样设置——Filter Mode</p>
+<p><img src="/img/%E6%8A%80%E6%9C%AF%E7%BE%8E%E6%9C%AF%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-1.3%E7%BA%B9%E7%90%86%E5%9F%BA%E7%A1%80/1731044351600.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>Filter Mode 决定了纹理在产生拉伸或缩放等形变时的表现</li>
+<li>三种过滤的区别在于选取的纹素范围不同。最近邻插值使用多个纹素对应一个像素；双线性插值使用2 * 2个像素；立方卷积插值（双立方插值）则使用4 * 4个像素。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
       
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
         
-        
-        
-        <a href=/2735749050@qq.com class="
-           hint--bottom hint--rounded"
-           aria-label="QQmail"
-           target="_blank"
-        >
-          <i class="iconfont icon-mail" aria-hidden="true"></i>
-          
-        </a>
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
       
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>技术美术百人计划-1.3纹理基础</div>
+      <div>https://mocacy42.github.io/2026/03/24/技术美术百人计划-1.3纹理基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>MKY42</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年3月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/03/24/%E4%BD%BF%E7%94%A8RenderFeature%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="使用RenderFeature遇到的问题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用RenderFeature遇到的问题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/24/%E6%8A%80%E7%BE%8E%E7%99%BE%E4%BA%BA%E8%AE%A1%E5%88%92-Unity%E7%A9%BA%E9%97%B4%E5%9D%90%E6%A0%87%E7%B3%BB/" title="技美百人计划-Unity空间坐标系">
+                        <span class="hidden-mobile">技美百人计划-Unity空间坐标系</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
     </div>
   </div>
 </div>
 
-<article class="about-content page-content mt-5">
-  <div class="markdown-body">
-    <p>这是关于页面</p>
-
-  </div>
-
-  
-</article>
-
 
 
 
@@ -404,11 +583,8 @@
 
 
 
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+
     
 
     
@@ -500,6 +676,110 @@
   
 
 
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
 
 
   <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>

@@ -1,0 +1,982 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/mky42.png">
+  <link rel="icon" href="/img/mky42.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="MKY42">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Microfacet Cook-Torrance BRDF1. 渲染方程$$L_o &#x3D; L_e +\int_\Omega f_r \cdot L_i \cdot (n \cdot \omega_i) \cdot d\omega_i$$  $L_o$ 表示出射光。 $L_e$ 表示自发光。 $f_r$ 表示BxDF，即从入射光方向到出射光方向的反射比例（反射率）。 $L_i$ 表示入射光。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PBR">
+<meta property="og:url" content="https://mocacy42.github.io/2026/03/24/PBR/index.html">
+<meta property="og:site_name" content="MKY42">
+<meta property="og:description" content="Microfacet Cook-Torrance BRDF1. 渲染方程$$L_o &#x3D; L_e +\int_\Omega f_r \cdot L_i \cdot (n \cdot \omega_i) \cdot d\omega_i$$  $L_o$ 表示出射光。 $L_e$ 表示自发光。 $f_r$ 表示BxDF，即从入射光方向到出射光方向的反射比例（反射率）。 $L_i$ 表示入射光。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mocacy42.github.io/img/PBR/SpecularBRDF.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/PBR/2D_LUT.png">
+<meta property="article:published_time" content="2026-03-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-24T06:44:36.523Z">
+<meta property="article:author" content="MKY42">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mocacy42.github.io/img/PBR/SpecularBRDF.png">
+  
+  
+  
+  <title>PBR - MKY42</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mocacy42.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mocacy42</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PBR"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-24 00:00" pubdate>
+          2026年3月24日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          62 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">PBR</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Microfacet-Cook-Torrance-BRDF"><a href="#Microfacet-Cook-Torrance-BRDF" class="headerlink" title="Microfacet Cook-Torrance BRDF"></a>Microfacet Cook-Torrance BRDF</h1><h2 id="1-渲染方程"><a href="#1-渲染方程" class="headerlink" title="1. 渲染方程"></a>1. 渲染方程</h2><p>$$<br>L_o &#x3D; L_e +\int_\Omega f_r \cdot L_i \cdot (n \cdot \omega_i) \cdot d\omega_i<br>$$</p>
+<ul>
+<li>$L_o$ 表示出射光。</li>
+<li>$L_e$ 表示自发光。</li>
+<li>$f_r$ 表示BxDF，即从入射光方向到出射光方向的反射比例（反射率）。</li>
+<li>$L_i$ 表示入射光。</li>
+<li>$(n \cdot \omega_i)$ 表示入射角度带来了光线衰减。</li>
+<li>$\int_\Omega …  d\omega_i$ 表示入射方向半球积分。</li>
+</ul>
+<p>常规的渲染方程由4个部分组成：直接漫反射 直接镜面反射 间接环境光漫反射 间接环境光镜面反射，最常见的Cook-TorranceBRDF方程如下：</p>
+<p>$$<br>L_o &#x3D; \int_\Omega (k_d \frac {c_{diff} }{\pi} \space+ \space k_s \frac {DFG} {4 (n , v)(n , \omega_i)})  \cdot L_i \cdot (n \cdot \omega_i) \cdot d\omega_i\<br>\space \<br>k_d &#x3D; (1 - F)(1 - Metallic)\<br>$$</p>
+<p>$ks$ 实际已经由 $F$ 表示，因此实际shader中不需要 $ks$</p>
+<h2 id="2-迪士尼原则BxDF"><a href="#2-迪士尼原则BxDF" class="headerlink" title="2. 迪士尼原则BxDF"></a>2. 迪士尼原则BxDF</h2><h3 id="2-1-核心理念（艺术导向，不一定要完全物理正确）"><a href="#2-1-核心理念（艺术导向，不一定要完全物理正确）" class="headerlink" title="2.1 核心理念（艺术导向，不一定要完全物理正确）"></a>2.1 核心理念（艺术导向，不一定要完全物理正确）</h3><ol>
+<li>应使用直观的参数，而不是物理类的晦涩参数。</li>
+<li>参数应尽可能少。</li>
+<li>参数在其合理范围内应该为0到1。</li>
+<li>允许参数在有意义时超出正常的合理范围。</li>
+<li>所有参数组合应尽可能健壮和合理。</li>
+</ol>
+<h3 id="2-2-迪士尼原则-BRDF-十大参数"><a href="#2-2-迪士尼原则-BRDF-十大参数" class="headerlink" title="2.2 迪士尼原则 BRDF 十大参数"></a>2.2 迪士尼原则 BRDF 十大参数</h3><ul>
+<li>baseColor（基础色）：表面颜色。</li>
+<li>subsurface（次表面）：使用次表面控制漫反射形状。</li>
+<li>metallic（金属度）：（0 &#x3D; 电介质 ， 1 &#x3D; 金属）控制两种模型线性混合。</li>
+<li>specular（镜面反射强度）：入射镜面反射量，用于取代折射率。</li>
+<li>specularTint（镜面反射颜色）：对baseColor的入射镜面反射进行颜色控制。</li>
+<li>roughness（粗糙度）：表面粗糙度，控制漫反射和镜面反射。</li>
+<li>anilsotropic（各向异性强度）：控制镜面反射高光的纵横比例。（0 &#x3D; 各向同性 ， 1 &#x3D; 各向异性）。</li>
+<li>sheen（光泽度）：额外掠射分量，用于布料。</li>
+<li>sheenTint（光泽颜色）：对sheen的颜色控制</li>
+<li>clearcoat（清漆强度）：有特殊用途的第二个镜面波瓣（specular lobe）。</li>
+<li>clearcoatGloss（清漆光泽度）：控制透明涂层光泽度（0 &#x3D; 缎面satin ，1 &#x3D; 光泽gloss）。</li>
+</ul>
+<h3 id="2-3-迪士尼原则BSDF"><a href="#2-3-迪士尼原则BSDF" class="headerlink" title="2.3 迪士尼原则BSDF"></a>2.3 迪士尼原则BSDF</h3><h2 id="3-漫反射BRDF模型（Diffuse-BRDF）"><a href="#3-漫反射BRDF模型（Diffuse-BRDF）" class="headerlink" title="3. 漫反射BRDF模型（Diffuse BRDF）"></a>3. 漫反射BRDF模型（Diffuse BRDF）</h2><p>Diffuse BRDF分为传统型和基于物理型两种，其中传统型主要为Lambert模型。</p>
+<p>基于物理型有许多，以下列举几种：</p>
+<ul>
+<li>Oren Nayar [1994]</li>
+<li>Simplified Oren-Nayar [2012]</li>
+<li>Disney Diffuse [2012]</li>
+<li>Renormalized Disney Diffuse [2012]</li>
+<li>Gotanda Diffuse [2014]</li>
+<li>PBR diffuse for GGX + Smith [2017] (Unity采用此种实现Lit Shader)</li>
+<li>MultiScattering Diffuse BRDF [2018]</li>
+</ul>
+<p>在UE中，漫反射BRDF使用如下公式：</p>
+<p>$$<br>f(l,v) &#x3D; \frac {c_{diff}} {\pi}<br>$$</p>
+<p>Cdiff 表示材质的漫反射率（diffuse albedo）</p>
+<h2 id="4-镜面反射BRDF模型（Specular-BRDF）"><a href="#4-镜面反射BRDF模型（Specular-BRDF）" class="headerlink" title="4. 镜面反射BRDF模型（Specular BRDF）"></a>4. 镜面反射BRDF模型（Specular BRDF）</h2><h3 id="4-1-Microfacet-Cook-Torrance-BRDF（基于微平面理论的BRDF）"><a href="#4-1-Microfacet-Cook-Torrance-BRDF（基于微平面理论的BRDF）" class="headerlink" title="4.1 Microfacet Cook-Torrance BRDF（基于微平面理论的BRDF）"></a>4.1 Microfacet Cook-Torrance BRDF（基于微平面理论的BRDF）</h3><p>$$<br>f(l,v)&#x3D;\frac{D(h)F(v,h)G(l,v,h)}{4(n\cdot l)(n\cdot v)}<br>$$</p>
+<ul>
+<li>$D(h)$ ：法线分布函数 （Normal Distribution Function），描述微面元法线分布的概率，即正确朝向的法线的浓度。即具有正确朝向，能够将来自l的光反射到v的表面点的相对于表面面积的浓度。</li>
+<li>$F(v,h)$ ：菲涅尔方程（Fresnel Equation），描述不同的表面角下表面所反射的光线所占的比率。</li>
+<li>$G(l,v,h)$ ：几何函数（Geometry Function），描述微平面自成阴影的属性，即m &#x3D; h的未被遮蔽的表面点的百分比。</li>
+<li>$4(n \cdot l) (n \cdot v)$ ：校正因子（correctionfactor），作为微观几何的局部空间和整个宏观表面的局部空间之间变换的微平面量的校正。</li>
+</ul>
+<p>注意点：</p>
+<ul>
+<li>对于分母的点积，不仅要避免负值，还要避免0值，一般通过clamp或绝对值操作后加上一个小正值0.0001来完成。</li>
+<li>Microfacet Cook-Torrance BRDF是实践中使用最广泛的模型，实际上也是人们可以想到的最简单的微平面模型。它仅对几何光学系统中的单层微表面上的单个散射进行建模，没有考虑多次散射，分层材质，以及衍射。Microfacet模型，实际上还有很长的路要走。（来自毛星云文章<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53086060">(48 封私信 &#x2F; 80 条消息) 【基于物理的渲染（PBR）白皮书】（一） 开篇：PBR核心知识体系总结与概览 - 知乎</a>）</li>
+</ul>
+<p>Specular BRDF 的种类相较于Diffuse而言十分复杂，根据D（NDF）、F、G三个阶段的不同处理可以得到许多BRDF模型。</p>
+<h4 id="4-1-1-Specualr-D"><a href="#4-1-1-Specualr-D" class="headerlink" title="4.1.1 Specualr D"></a>4.1.1 Specualr D</h4><p>表示法线分布函数，描述微平面发现分布概率（正确朝向的法线浓度），根据光学特性分为以下几种模型（<em>斜体</em> 表示业界主流）：</p>
+<h5 id="各向同性（Isotropic）"><a href="#各向同性（Isotropic）" class="headerlink" title="各向同性（Isotropic）"></a>各向同性（Isotropic）</h5><ul>
+<li>Beckmann [1963]</li>
+<li>Blinn-Phong [1977]</li>
+<li><em>GGX [2007] &#x2F; Trowbridge-Reitz [1975]</em></li>
+<li>Generalized-Trowbridge-Reitz(GTR) [2012]</li>
+</ul>
+<h5 id="各向异性-Anisotropic"><a href="#各向异性-Anisotropic" class="headerlink" title="各向异性(Anisotropic)"></a>各向异性(Anisotropic)</h5><ul>
+<li>Anisotropic Beckmann [2012]</li>
+<li>Anisotropic GGX [2015]</li>
+</ul>
+<p>业界主流使用GGX（Trowbridge-Reitz），因为往往具有更加柔和的高光长尾。</p>
+<p>$$<br>D_{GGX} (n,h) &#x3D;\frac {\alpha^2}{\pi((n \cdot h)^2(\alpha^2 - 1)+1)^2}<br>$$</p>
+<p>其中 $ \alpha &#x3D; roughness^2$ 并且 $roughness &#x3D; 1 - smoothness$</p>
+<p><img src="/img/PBR/SpecularBRDF.png" srcset="/img/loading.gif" lazyload alt="SpecularBRDF"></p>
+<h4 id="4-1-2-Specular-F"><a href="#4-1-2-Specular-F" class="headerlink" title="4.1.2 Specular F"></a>4.1.2 Specular F</h4><p>表示菲涅尔方程，描述不同表面角下所反射的光线占比，有三种模型：</p>
+<ul>
+<li>Cook-Torrance [1982]</li>
+<li>Schlick [1994]</li>
+<li>Gotanta [2014]</li>
+</ul>
+<p>业界一般使用Schlick的Fresnel近似：</p>
+<p>$$<br>F_{Schlick}(v,h) &#x3D; F_0 + (1 - F_0)(1 - (v,h))^5<br>$$</p>
+<h4 id="4-2-3-Specular-G"><a href="#4-2-3-Specular-G" class="headerlink" title="4.2.3 Specular G"></a>4.2.3 Specular G</h4><p>表示几何函数，描述微平面自成阴影与自我遮挡的属性，有以下几种模型：</p>
+<ul>
+<li>Smith [1967]</li>
+<li>Cook-Torrance [1982]</li>
+<li>Neumann [1999]</li>
+<li>Kelemen [2001]</li>
+<li>Implicit [2013]</li>
+</ul>
+<p>以及Smith联合遮蔽阴影函数（Smith joint maksing-shadowing function）包括以下四种 :</p>
+<p>1.高度相关的掩蔽阴影型 Height-Correlated Masking and Shadowing</p>
+<p>2.方向相关的掩蔽阴影型 Direction-Correlated Masking and Shadowing</p>
+<p>3.高度-方向相关的掩蔽阴影型 Height-Direction-Correlated Masking and Shadowing</p>
+<p>4.分离遮蔽阴影型 Separable Masing and Shadowing 包括如下几种：</p>
+<ul>
+<li>Smith-GGX</li>
+<li>Smith-Beckmann</li>
+<li>Smith-Schlick</li>
+<li>Schlick-Beckmann</li>
+<li><em>Schlick-GGX</em> （UE4）</li>
+</ul>
+<p>业界常用最简单的分离遮蔽阴影型，它将G分为两个不放呢：光线方向和视线方向，并对连着使用相同的分布函数描述。根据这种思想，结合法线分布函数NDF与Smith几何阴影函数得到。</p>
+<p>UE4使用Schlick-GGX，基于Schlick近似，将k映射为$k &#x3D; \frac \alpha 2$ 从而匹配GGX Smith方程，也有$ k &#x3D; \frac {(\alpha + 1)^2}{8}$ 的映射：</p>
+<p>$$<br>k &#x3D; \frac {\alpha} {2} \<br>\space\<br>\alpha &#x3D; (\frac {roughness^2 +1}{2})^2 \<br>\space\<br> G_1(v) &#x3D; \frac {n \cdot v}{(n \cdot v)(1 - k) + k}\<br>\space\<br>G(l,v,n) &#x3D; G_1(l)G_1(v)<br>$$</p>
+<h2 id="5-基于物理的环境光照（间接光照）"><a href="#5-基于物理的环境光照（间接光照）" class="headerlink" title="5. 基于物理的环境光照（间接光照）"></a>5. 基于物理的环境光照（间接光照）</h2><h3 id="5-1-漫反射间接光"><a href="#5-1-漫反射间接光" class="headerlink" title="5.1 漫反射间接光"></a>5.1 漫反射间接光</h3><p>根据辉度环境映射（Irradiance Environment Mapping）分为以下几种方法：</p>
+<ul>
+<li>立方体映射 Cube Mapping</li>
+<li>球谐函数 Spherical Harmonics</li>
+<li>蒙特卡洛积分 Monte Carlo Integration</li>
+<li>球面高斯 Spherical Gaussians</li>
+<li>H-基底 H-basis</li>
+</ul>
+<h3 id="5-2-镜面反射间接光"><a href="#5-2-镜面反射间接光" class="headerlink" title="5.2 镜面反射间接光"></a>5.2 镜面反射间接光</h3><p>使用基于图像的镜面反射光照 IBL（Specular Image-Based Lighting）：</p>
+<ul>
+<li>预过滤环境映射 Prefiltering Environment Mapping</li>
+<li>非对称波瓣 Asymmetric Lobe</li>
+<li>各向异性波瓣 Anisotropic Lobe</li>
+<li>分解求和近似 Split Sum Approximation 分为两项：<ol>
+<li>预过滤环境贴图 Prefiltered Environment Map</li>
+<li>环境BRDF： 包括 2D LUT、解析拟合、3D LUT等处理方法</li>
+</ol>
+</li>
+</ul>
+<p>基于物理的镜面反射（Specular）环境光照，业界中一般会采用基于图像的光照（IBL）的方案。要将基于物理的BRDF模型与基于图像的光照（IBL）一起使用，需要求解光亮度积分（Radiance Integral），而求解光亮度积分通常会使用重要性采样（Importance Sample）。</p>
+<p>重要性采样（Importance Sample）即通过现有的一些已知条件（分布函数），想办法集中于被积函数分布可能性较高的区域(重要的区域)进行采样，进而可高效地计算准确的估算结果的的一种策略。</p>
+<h3 id="5-3-分解求和近似-Split-Sum-Approximation"><a href="#5-3-分解求和近似-Split-Sum-Approximation" class="headerlink" title="5.3 分解求和近似 Split Sum Approximation"></a>5.3 分解求和近似 Split Sum Approximation</h3><p>根据蒙特卡洛积分公式，渲染方程可以近似为：</p>
+<p>$$<br>\int_{\Omega}L_i(l)f(l,v)\cos\theta_l\cdot dl \approx \frac 1 N \sum^N_{k &#x3D; 1} \frac {L_i(l_k)f(l_k,v)\cos\theta_{l_k}}{p(l_k,v)}<br>$$</p>
+<p>在实时渲染中，直接求解对性能消耗过大。因此在业界中，基于分解求和近似思想，上述项可以被分为另外两项：表示光亮度均值的$\frac 1 N \sum^N_{k&#x3D;1}L_i(l_k)$ 和环境BRDF$ \frac 1 N \sum^N_{k&#x3D;1} \frac {f(l_k,v)\cos\theta_{l_k}}{p(l_k,v）}$ .</p>
+<p>$$<br>\int_{\Omega}L_i(l)f(l,v)\cos\theta_l\cdot dl \approx \left( \frac 1 N \sum^N_{k&#x3D;1}L_i(l_k) \right) \left(\frac 1 N \sum^N_{k&#x3D;1} \frac {f(l_k,v)\cos\theta_{l_k}}{p(l_k,v）}\right)<br>$$</p>
+<p>完成拆分后，分别对两项进行离线预计算，去匹配离线渲染参考值的渲染结果。</p>
+<p>而在实时渲染中，分别计算分解求和近似（Split Sum Approximation）方案中几乎已经预计算好的两项，再进行组合，作为实时的IBL物理环境光照部分的渲染结果。下面分别对两项进行简单概括。</p>
+<h3 id="5-4-预过滤环境贴图-frac-1-N-sum-N-k-1-L-i-l-k"><a href="#5-4-预过滤环境贴图-frac-1-N-sum-N-k-1-L-i-l-k" class="headerlink" title="5.4 预过滤环境贴图$ \frac 1 N \sum^N_{k&#x3D;1}L_i(l_k)$"></a>5.4 预过滤环境贴图$ \frac 1 N \sum^N_{k&#x3D;1}L_i(l_k)$</h3><p>$ \frac 1 N \sum^N_{k&#x3D;1}L_i(l_k)$ 表示对光亮度度求均值，可以使用多级模糊的mipmap存储模糊环境高光</p>
+<p>$$<br>\frac 1 N \sum^N_{k&#x3D;1}L_i(l_k) \approx Cubemap.Sample(r , miplevel)<br>$$</p>
+<h3 id="5-5-环境BRDF-frac-1-N-sum-N-k-1-frac-f-l-k-v-cos-theta-l-k-p-l-k-v）"><a href="#5-5-环境BRDF-frac-1-N-sum-N-k-1-frac-f-l-k-v-cos-theta-l-k-p-l-k-v）" class="headerlink" title="5.5 环境BRDF$ \frac 1 N \sum^N_{k&#x3D;1} \frac {f(l_k,v)\cos\theta_{l_k}}{p(l_k,v）}$"></a>5.5 环境BRDF$ \frac 1 N \sum^N_{k&#x3D;1} \frac {f(l_k,v)\cos\theta_{l_k}}{p(l_k,v）}$</h3><p>$ \frac 1 N \sum^N_{k&#x3D;1} \frac {f(l_k,v)\cos\theta_{l_k}}{p(l_k,v）}$ 表示镜面反射项的半球反射率，取决与仰角 $ \theta$ 粗糙度 $\alpha$ 和菲涅尔项 $F$ 。通常使用Schlick近似$F$ ，其仅在单个值F0上参数化，从而使Rspec成为三个参数(仰角 $ \theta$（NdotV）、粗糙度 $\alpha$、F0)的函数。</p>
+<p>在具体处理中，主要有两种方案，UE4的2D LUT 以及 COD：OP2的解析拟合。</p>
+<h4 id="5-5-1-2D-LUT"><a href="#5-5-1-2D-LUT" class="headerlink" title="5.5.1 2D LUT"></a>5.5.1 2D LUT</h4><p>UE4在[Real Shading in Unreal Engine 4, 2013]中提出，第二个求和项 ，使用Schlick近似后， F0可以从积分中分出来：</p>
+<p>$$<br>\begin{align}<br>\int_\Omega L_i (l)f(l,v)\cos\theta_l \cdot dl &#x3D;  \space<br>&amp; F_0 \int_\Omega \frac {f(l,v)} {F(v,h)} (1 - (1 -v \cdot h)^5)\cos\theta_l dl  \nonumber \<br>\space\nonumber \ &amp;+ \int_\Omega \frac {f(l,v)} {F(v,h)} (1 -v \cdot h)^5\cos\theta_l dl \nonumber<br>\end{align}<br>$$</p>
+<p>上式留下了两个输入（Roughness(v , h) 和 cos θv (l , v)）和两个输出（缩放和向F0的偏差（a scale and bias to F0）），即把上述方程看成是F0 * Scale + Offset的形式。 我们预先计算此函数的结果并将其存储在2D查找纹理（LUT，look-up texture）中。</p>
+<p><img src="/img/PBR/2D_LUT.png" srcset="/img/loading.gif" lazyload alt="2D_LUT"></p>
+<p>这张红绿色的贴图，输入roughness、cosθ，输出环境BRDF镜面反射的强度。是关于roughness、cosθ与环境BRDF镜面反射强度的固有映射关系。可以离线预计算。</p>
+<p>$$<br>\frac 1 N \sum^N_{k&#x3D;1} \frac {f(l_k,v)\cos\theta_{l_k}}{p(l_k,v）} &#x3D; LUT.r \space * F_0 + LUT.g<br>$$</p>
+<p>即UE4是通过把Fresnel公式的F0提出来，组成F0 * Scale +Offset的方式，再将Scale和Offset的索引存到一张2D LUT上。靠roughness和 NdotV进行查找。</p>
+<h4 id="5-5-2-解析拟合"><a href="#5-5-2-解析拟合" class="headerlink" title="5.5.2 解析拟合"></a>5.5.2 解析拟合</h4><p>COD：Black Ops 2的做法，是通过数学工具Mathematica（<a href="https://link.zhihu.com/?target=http://www.wolfram.com/mathematica/">http://www.<strong>wolfram.com&#x2F;mathematica</strong>&#x2F;</a>） 中的数值积分拟合出曲线，即将UE4离线计算的这张2D LUT用如下函数进行了拟合：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function">float3 <span class="hljs-title">EnvironmentBRDF</span> (<span class="hljs-params"><span class="hljs-built_in">float</span> g , <span class="hljs-built_in">float</span> NdotV , <span class="hljs-built_in">float</span> rf0</span>)</span><br>&#123;<br>    float4 t = float4( <span class="hljs-number">1</span>/<span class="hljs-number">0.96</span>, <span class="hljs-number">0.475</span>, (<span class="hljs-number">0.0275</span> - <span class="hljs-number">0.25</span> \* <span class="hljs-number">0.04</span>)/<span class="hljs-number">0.96</span>, <span class="hljs-number">0.25</span> );<br>    t *= float4( g, g, g, g );<br>    t += float4( <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, (<span class="hljs-number">0.015</span> - <span class="hljs-number">0.75</span> * <span class="hljs-number">0.04</span>)/<span class="hljs-number">0.96</span>, <span class="hljs-number">0.75</span> );<br>    <span class="hljs-built_in">float</span> a0 = t.x * min( t.y, exp2( <span class="hljs-number">-9.28</span> * NoV ) ) + t.z; <span class="hljs-built_in">float</span> a1 = t.w;<br>    <span class="hljs-keyword">return</span> saturate( a0 + rf0 * ( a1 - a0 ) );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，上面的方程是基于Blinn-Phong分布的结果，<a href="https://link.zhihu.com/?target=https://knarkowicz.wordpress.com/2014/12/27/analytical-dfg-term-for-ibl/">https:&#x2F;&#x2F;<strong>knarkowicz.wordpress.com</strong>&#x2F;2014&#x2F;12&#x2F;27&#x2F;analytical-dfg-term-for-ibl&#x2F;</a>一文中提出了基于GGX分布的EnvironmentBRDF解析版本：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Csharp"><span class="hljs-function">float3 <span class="hljs-title">EnvDFGLazarov</span>(<span class="hljs-params"> float3 specularColor, <span class="hljs-built_in">float</span> gloss, <span class="hljs-built_in">float</span> ndotv </span>)</span><br>&#123;<br>    float4 p0 = float4( <span class="hljs-number">0.5745</span>, <span class="hljs-number">1.548</span>, <span class="hljs-number">-0.02397</span>, <span class="hljs-number">1.301</span> );<br>    float4 p1 = float4( <span class="hljs-number">0.5753</span>, <span class="hljs-number">-0.2511</span>, <span class="hljs-number">-0.02066</span>, <span class="hljs-number">0.4755</span> );<br>    float4 t = gloss * p0 + p1;<br>    <span class="hljs-built_in">float</span> bias = saturate( t.x * min( t.y, exp2( <span class="hljs-number">-7.672</span> * ndotv ) ) + t.z );<br>    <span class="hljs-built_in">float</span> delta = saturate( t.w );<br>    <span class="hljs-built_in">float</span> scale = delta - bias;<br>    bias *= saturate( <span class="hljs-number">50.0</span> * specularColor.y );<br>    <span class="hljs-keyword">return</span> specularColor * scale + bias;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上式中的specularColor即F0。</p>
+<p>EnvironmentBRDF函数的输入参数分别为光泽度gloss，NdotV，F0。和UE4的做法有异曲同工之妙，但COD：Black Ops 2的做法不需要额外的贴图采样，这在进行移动端优化时，是不错的选择。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/53086060">【基于物理的渲染（PBR）白皮书】（一） 开篇：PBR核心知识体系总结与概览 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/4209836850">【Unity Graphics】PBR（Physically Based Rendering）手撕PBR（2） - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/125459331">[译]Real Shading in Unreal Engine 4（UE4中的真实渲染)(2) - 知乎</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PBR</div>
+      <div>https://mocacy42.github.io/2026/03/24/PBR/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>MKY42</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年3月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/03/24/Addressables/" title="Addressables">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Addressables</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/24/PBR%E7%9A%84DGF%E5%85%AC%E5%BC%8F%E6%80%BB%E7%BB%93/" title="PBR的DGF公式总结">
+                        <span class="hidden-mobile">PBR的DGF公式总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
