@@ -3,8 +3,7 @@ name: Deploy Hexo to GitHub Pages
 on:
   push:
     branches:
-      - main  # 如果你的默认分支是 master，请改为 master
-      - master
+      - main
 
 jobs:
   build-and-deploy:
@@ -13,26 +12,22 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
         with:
-          submodules: true  # 重要：如果你还在用子模块，必须开启这个；如果是方案B（普通文件夹），这个开了也没事
+          submodules: true
           fetch-depth: 0
 
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v3
         with:
-          node-version: '24' # 推荐使用 Node 18 或 20，避免版本过旧导致依赖安装失败
+          node-version: '24'
 
       - name: Install Dependencies 📦
-        run: npm install     # 【关键步骤】这一步会安装 hexo 到 node_modules，之后才能运行 hexo 命令
+        run: npm install
 
       - name: Generate Static Files 🏗️
-        run: npx hexo generate # 【建议】使用 npx hexo 而不是直接 hexo，这样更稳妥，不需要全局安装
-        # 如果上面这行报错，也可以尝试: run: ./node_modules/.bin/hexo generate
+        run: npx hexo generate
 
       - name: Deploy to GitHub Pages 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: main # 确保这里和你仓库的默认分支一致 (main 或 master)
-          user_name: Mocacy42
-          user_email: 2735749050@qq.com
+        run: |
+          git config --global user.name "Mocacy42"
+          git config --global user.email "2735749050@qq.com"
+          npx hexo deploy
