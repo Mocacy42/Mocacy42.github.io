@@ -32,7 +32,7 @@ jobs:
       - name: Generate Static Files 🏗️
         run: npx hexo generate
         env:
-          NODE_ENV: production
+          NODE_ENV: production 
 
       - name: Deploy to GitHub Pages 🚀
         run: |
