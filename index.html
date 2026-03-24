@@ -333,15 +333,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2026/03/24/hello-world/" target="_self">
-          Hello World
+        <a href="/2026/03/24/ComputeShader/" target="_self">
+          Unity Compute Shader
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/03/24/hello-world/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2026/03/24/ComputeShader/" target="_self">
         <div>
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick
+          Compute Shader 计算着色器1. GPGPU相较于在 CPU 少核架构而言，当代 GPU 多核架构设计决定了其在大规模并行计算问题上的的性能优势。 这种优势本是为了图形渲染准备的，但是也可以将之运用于非图形渲染应用中，叫做 GPGPU ( General Purpose GPU ) 编程。 CPU 和 GPU 之间的通信非常慢，但是与使用 GPU 计算得到的性能提升相比，这不值一提。
         </div>
       </a>
 
@@ -349,12 +349,193 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2026-03-24 10:42" pubdate>
+            <time datetime="2026-03-24 13:10" pubdate>
               2026-03-24
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Unity/">#Unity</a>
+            
+              <a href="/tags/ComputeShader/">#ComputeShader</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/11/25/Job%20System/" target="_self">
+          Job System
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/11/25/Job%20System/" target="_self">
+        <div>
+          Job SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。 核心思想其核心思想就是将每个任务做成一个 Struct ，让其实现 IJob,IJobParallelFor等接口，其中仅包含数据和对数据的处理逻辑而无引
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-11-25 15:27" pubdate>
+              2025-11-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Unity/">#Unity</a>
+            
+              <a href="/tags/JobSystem/">#JobSystem</a>
+            
+              <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">#多线程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/11/10/Addressables/" target="_self">
+          Unity的Addressables
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/11/10/Addressables/" target="_self">
+        <div>
+          Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234// 加载资源GameObject prefab = Resources.Load&lt;GameObject&gt;(&quot;Characters/MyCharacter&quot;);// 卸载资源Resour
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-11-10 01:52" pubdate>
+              2025-11-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Unity/">#Unity</a>
+            
+              <a href="/tags/Addressables/">#Addressables</a>
+            
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/">#动态资源管理</a>
+            
+          </div>
         
       </div>
     </article>

@@ -1,0 +1,1085 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/author.png">
+  <link rel="icon" href="/img/author.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="MKY42">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Compute Shader 计算着色器1. GPGPU相较于在 CPU 少核架构而言，当代 GPU 多核架构设计决定了其在大规模并行计算问题上的的性能优势。 这种优势本是为了图形渲染准备的，但是也可以将之运用于非图形渲染应用中，叫做 GPGPU ( General Purpose GPU ) 编程。 CPU 和 GPU 之间的通信非常慢，但是与使用 GPU 计算得到的性能提升相比，这不值一提。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity Compute Shader">
+<meta property="og:url" content="http://example.com/2026/03/24/ComputeShader/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Compute Shader 计算着色器1. GPGPU相较于在 CPU 少核架构而言，当代 GPU 多核架构设计决定了其在大规模并行计算问题上的的性能优势。 这种优势本是为了图形渲染准备的，但是也可以将之运用于非图形渲染应用中，叫做 GPGPU ( General Purpose GPU ) 编程。 CPU 和 GPU 之间的通信非常慢，但是与使用 GPU 计算得到的性能提升相比，这不值一提。">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/img/ComputeShader/XPUCorrespondingSpeed.png">
+<meta property="og:image" content="http://example.com/img/ComputeShader/ThreadAndThreadGroup.png">
+<meta property="article:published_time" content="2026-03-24T05:10:53.035Z">
+<meta property="article:modified_time" content="2026-03-24T05:22:36.881Z">
+<meta property="article:author" content="MKY42">
+<meta property="article:tag" content="ComputeShader">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/ComputeShader/XPUCorrespondingSpeed.png">
+  
+  
+  
+  <title>Unity Compute Shader - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Startseite</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archiv</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Kategorien</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Schlagwörter</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>Über</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Startseite</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archiv</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Kategorien</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Schlagwörter</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>Über</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Suchen</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Hell"
+               data-label-dark="Dunkel">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dunkel</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Unity Compute Shader"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-24 13:10" pubdate>
+          March 24, 2026 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k wörter
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          96 minuten
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Unity Compute Shader</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Compute-Shader-计算着色器"><a href="#Compute-Shader-计算着色器" class="headerlink" title="Compute Shader 计算着色器"></a>Compute Shader 计算着色器</h1><h2 id="1-GPGPU"><a href="#1-GPGPU" class="headerlink" title="1. GPGPU"></a>1. GPGPU</h2><p>相较于在 CPU 少核架构而言，当代 GPU 多核架构设计决定了其在大规模并行计算问题上的的性能优势。</p>
+<p>这种优势本是为了图形渲染准备的，但是也可以将之运用于非图形渲染应用中，叫做 GPGPU ( General Purpose GPU ) 编程。</p>
+<p>CPU 和 GPU 之间的通信非常慢，但是与使用 GPU 计算得到的性能提升相比，这不值一提。</p>
+<p><img src="/img/ComputeShader/XPUCorrespondingSpeed.png" srcset="/img/loading.gif" lazyload alt="CPU GPU 相对内存带宽速度"></p>
+<p>用户所需要做的就是</p>
+<ul>
+<li>在 CPU 准备数据。</li>
+<li>将数据传给 GPU 。</li>
+<li>GPU 计算( Compute Shader )。</li>
+<li>返回数据至 CPU 。</li>
+</ul>
+<p>Compute Shader ( CS ) 是独立于渲染管线之外的可编程渲染器，可以对 GPU 资源进行读写操作，本身并不绘制任何图形。</p>
+<p>CS 本质是显卡以及图形 API 的产物，Unity 在 Direct3D API 的基础上进行了封装。</p>
+<h2 id="2-Unity-中的-Compute-Shader"><a href="#2-Unity-中的-Compute-Shader" class="headerlink" title="2. Unity 中的 Compute Shader"></a>2. Unity 中的 Compute Shader</h2><h3 id="默认文件-Default-Compute-Shader"><a href="#默认文件-Default-Compute-Shader" class="headerlink" title="默认文件 Default Compute Shader"></a>默认文件 Default Compute Shader</h3><p>Unity 生成的 Compute Shader 文件属于 Asset 文件，以 <code>.compute</code>作为后缀。<br>其默认内容如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> kernel CSMain</span><br><br>RWTexture2D&lt;float4&gt; Result;<br><br>[<span class="hljs-meta">numthreads(8,8,1)</span>]<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CSMain</span> (<span class="hljs-params">uint3 id : SV_DispatchThreadID</span>)</span><br>&#123;<br>	Result[id.xy] = float4(id.x &amp; id.y, (id.x &amp; <span class="hljs-number">15</span>)/<span class="hljs-number">15.0</span>, (id.y &amp; <span class="hljs-number">15</span>)/<span class="hljs-number">15.0</span>, <span class="hljs-number">0.0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="核函数声明"><a href="#核函数声明" class="headerlink" title="核函数声明"></a>核函数声明</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> kernel CSMain`</span><br></code></pre></td></tr></table></figure>
+
+<p><code>CSMain</code>就是一个函数名，<code>kernel</code>表示内核，这一行将<code>CSMain</code>声明为核函数，最终会在 GPU 中调用。CS 中至少需要一个<code>kernel</code>才可以被调用。</p>
+<p>CS 中可以声明多个<code>kernel</code>，此外，指令后面可以定义预处理宏命令。（注释不应卸载该命令后面）</p>
+<h3 id="变量声明"><a href="#变量声明" class="headerlink" title="变量声明"></a>变量声明</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cs">RWTexture2D&lt;float4&gt; Result;<br></code></pre></td></tr></table></figure>
+
+<p><code>RW</code>分别表示<code>Read</code>和<code>Write</code>，因此这行表示声明了一张可以被 CS 读写的二维纹理，只读不写可以直接使用<code>Texture2D</code>，只写不读没有对于 API，需要自己写代码规范。</p>
+<p>这样一张 2D 纹理，可以像这样获取单个像素：<code>Result[uint2(0,0)]</code>，其中每个像素的值就是<code>float4</code>。</p>
+<p>在 CS 中，可以读写的类型除了<code>RWTexture</code>以外还有<code>RWBuffer</code>和<code>RwStructuredBuffer</code>。</p>
+<p>CS 提供了一系列可读写的类型，这些类型被称为 Unordered Access View (UAV) ：</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>RWTexture1D&lt;T&gt;</code></td>
+<td align="center">1D 可读写纹理</td>
+</tr>
+<tr>
+<td align="center"><code>RWTexture1DArray&lt;T&gt;</code></td>
+<td align="center">1D 可读写纹理</td>
+</tr>
+<tr>
+<td align="center"><code>RWTexture2D&lt;T&gt;</code></td>
+<td align="center">2D 可读写纹理</td>
+</tr>
+<tr>
+<td align="center"><code>RWTexture2DArray&lt;T&gt;</code></td>
+<td align="center">2D 可读写纹理</td>
+</tr>
+<tr>
+<td align="center"><code>RWTexture3D&lt;T&gt;</code></td>
+<td align="center">3D 体素纹理</td>
+</tr>
+<tr>
+<td align="center"><code>RWBuffer&lt;T&gt;</code></td>
+<td align="center">一维线性缓存</td>
+</tr>
+<tr>
+<td align="center"><code>RWStructuredBuffer&lt;T&gt;</code></td>
+<td align="center">一维结构化缓存</td>
+</tr>
+<tr>
+<td align="center"><code>RWByteAddressBuffer</code></td>
+<td align="center">一维字节寻址缓存</td>
+</tr>
+<tr>
+<td align="center"><code>RWByteAddressBuffer</code></td>
+<td align="center">一维可写字节缓存</td>
+</tr>
+<tr>
+<td align="center">此外，还有一系列只读类型，称为 Shader Resource View (SRV) ：</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>Texture1D</code> &#x2F; <code>Texture1DArray</code></td>
+<td align="center">1D 只读纹理</td>
+</tr>
+<tr>
+<td align="center"><code>Texture2D</code> &#x2F; <code>Texture2DArray</code></td>
+<td align="center">2D 只读纹理</td>
+</tr>
+<tr>
+<td align="center"><code>Texture3D</code></td>
+<td align="center">3D 只读体纹理</td>
+</tr>
+<tr>
+<td align="center"><code>TextureCube</code> &#x2F; <code>TextureCubeArray</code></td>
+<td align="center">立方体贴图</td>
+</tr>
+<tr>
+<td align="center"><code>Buffer&lt;T&gt;</code></td>
+<td align="center">一维只读线性缓存</td>
+</tr>
+<tr>
+<td align="center"><code>StructuredBuffer&lt;T&gt;</code></td>
+<td align="center">一维只读结构化缓存</td>
+</tr>
+<tr>
+<td align="center"><code>ByteAddressBuffer</code></td>
+<td align="center">一维只读字节寻址</td>
+</tr>
+</tbody></table>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><h4 id="为线程组分配线程"><a href="#为线程组分配线程" class="headerlink" title="为线程组分配线程"></a>为线程组分配线程</h4><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cs">[<span class="hljs-meta">numthreads(tX,tY,tZ)</span>]<br><span class="hljs-comment">// t: thread id</span><br></code></pre></td></tr></table></figure>
+
+<p>这个属性定义了一个<strong>线程组（ThreadGroup）</strong> 中可以被执行的<strong>线程（Thread）</strong> 总数。这里代表有<code>tX * tY * tZ</code>个线程。每个核函数前面都应该有该属性，否则编译报错。</p>
+<p>要执行的所有线程被划分为数个线程组，每个线程组运行在单个流多处理器（Stream Multiprocessor， SM）上。为了保证 SM 不会空转，每个 SM 至少需要两个线程组，这叫延迟隐藏，SM 可以切换到处理不同组中的线程以提高利用率。</p>
+<p>每个线程组内有一个独立的共享内存，组内线程可以访问，线程组之间无法相互访问，这是组内线程同步操作的前提。</p>
+<p>tX，tY，tZ 的值在不同 CS 版本中有不同约束：</p>
+<table>
+<thead>
+<tr>
+<th align="center">Compute Shader Version</th>
+<th align="center">tZ Max</th>
+<th align="center">tX * tY * tZ Max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">cs_4_x</td>
+<td align="center">1</td>
+<td align="center">768</td>
+</tr>
+<tr>
+<td align="center">cs_5_0</td>
+<td align="center">64</td>
+<td align="center">1024</td>
+</tr>
+<tr>
+<td align="center">在 NAVIDIA 显卡（按照 SIMD32 规范）中，每个 SM 在硬件层使用 Warp 执行线程，而一个 Warp 可以控制 32 个线程执行相同指令，因此为了避免空转，线程总数应该为 32 的倍数。在 AMD 显卡中，wavefront 可以控制 64 个线程。综合建议将 <code>numthreads</code>值设置为 64 的倍数，以兼容两种显卡。</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h4 id="分配线程组"><a href="#分配线程组" class="headerlink" title="分配线程组"></a>分配线程组</h4><p>在 Direct3D12 中，可以使用<code>ID3D12GraphicsCommandList::Dispatch(gX,gY,gZ)</code>创建<code>gX * gY * gZ</code>个线程组，其在不同 CS 版本中亦有约束：</p>
+<table>
+<thead>
+<tr>
+<th align="center">Compute Shader Version</th>
+<th align="center">gX gY Max</th>
+<th align="center">gZ Max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">cs_4_x</td>
+<td align="center">65535</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">cs_5_0</td>
+<td align="center">65535</td>
+<td align="center">65535</td>
+</tr>
+</tbody></table>
+<p><img src="/img/ComputeShader/ThreadAndThreadGroup.png" srcset="/img/loading.gif" lazyload alt="Thread And Thread Group 分配情况"></p>
+<p>上半部分表示线程组分配，下半部分表示每个线程组中的线程分配。</p>
+<ul>
+<li><code>SV_GroupID</code>：表示线程所在线程组的 ID。</li>
+<li><code>SV_GroupThreadID</code>：表示线程在线程组内的相对 ID。</li>
+<li><code>SV_DispatchThreadID</code>：表示线程在所有线程中的绝对 ID，计算方式：<code>SV_DispatchThreadID = SV_GroupID * numthreads + SV_GroupThreadID</code></li>
+<li><code>SV_GroupIdex</code>：表示线程在当前线程组内的下标，计算方式：<code>SV_GroupIndex = SV_GroupThreadID.z * numthreads.x * numthreads.y + SV_GroupThreadID.y * numthreads.x + SV_GroupThreadID.x</code></li>
+</ul>
+<p>在分配线程组的时候可以想象，将大小为（ x, y, z ）（和计算规模直接相关）的立方体用大小为（ tX，tY，tZ ）的立方体填充，得到结果就是 （ gX，gY，gZ ）。</p>
+<h3 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CSMain</span>(<span class="hljs-params">uint3 id : SV_DispatchThreadID</span>)</span><br>&#123;<br>	Result[id.xy] = float4(id.x &amp; id.y, (id.x &amp; <span class="hljs-number">15</span>)/<span class="hljs-number">15.0</span>, (id.y &amp; <span class="hljs-number">15</span>)/<span class="hljs-number">15.0</span>, <span class="hljs-number">0.0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>除了传递<code>SV_DispatchThreadID</code>也可以传递其他参数：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">KernelFunction</span>(<span class="hljs-params">uint3 groupId : SV_GroupID,</span></span><br><span class="hljs-params"><span class="hljs-function">    uint3 groupThreadId : SV_GroupThreadID,</span></span><br><span class="hljs-params"><span class="hljs-function">    uint3 dispatchThreadId : SV_DispatchThreadID,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-built_in">uint</span> groupIndex : SV_GroupIndex</span>)</span> &#123; &#125;<br></code></pre></td></tr></table></figure>
+
+<p>在本例中，<code>Texture2D</code>被分为 64个像素作为一个线程组，每个线程组恰好 64 个线程，因此每个线程处理一个像素。<code>id.xy</code>被设计专门在线程组间不会重复访问，在组内遍历每个线程。</p>
+<h3 id="CS-与-C-脚本交互"><a href="#CS-与-C-脚本交互" class="headerlink" title="CS 与 C# 脚本交互"></a>CS 与 C# 脚本交互</h3><h4 id="Texture2D-Example"><a href="#Texture2D-Example" class="headerlink" title="Texture2D Example"></a>Texture2D Example</h4><p>CS 强制使用 C# 驱动，<code>.compute</code>可以被 C# 引用。在本例中可以在 C# 中创建一个<code>RenderTexture</code>，并且将之赋给<code>Result</code>对象。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ComputeShaderExample</span> :　<span class="hljs-title">MonoBehaviour</span><br>&#123;<br>	<span class="hljs-keyword">public</span> ComputeShader computeShader;<br>	<span class="hljs-keyword">public</span> Material material;<br>	<span class="hljs-keyword">private</span> RenderTexture rt;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span><br>	&#123;<br>		<span class="hljs-comment">// 0 表示不需要深度缓冲</span><br>		rt = <span class="hljs-keyword">new</span> RenderTexture(<span class="hljs-number">256</span>,<span class="hljs-number">256</span>,<span class="hljs-number">0</span>);<br>		rt.enableRandomWrite = <span class="hljs-literal">true</span>;<br>		rt.Create();<br>		<br>		<span class="hljs-comment">// 将 _MainTex 设置为创建的 RenderTexture</span><br>		material.mainTexture = rt;<br>		<span class="hljs-built_in">int</span> kernelIndex = computeShader.FindKernel(<span class="hljs-string">&quot;CSMain&quot;</span>);<br>		computeShader.SetTexture(kernelIndex,<span class="hljs-string">&quot;Result&quot;</span>,rt);<br>		computeShader.Dispatch(kernelIndex,<span class="hljs-number">256</span>/<span class="hljs-number">8</span>,<span class="hljs-number">256</span>/<span class="hljs-number">8</span>,<span class="hljs-number">1</span>);<br>	&#125;<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>	&#123;<br>		<span class="hljs-keyword">if</span>(rt) rt.Release();<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个脚本创建了<code>RenderTexture</code>并且将之传递给<code>ComputeShader</code>计算每个像素的颜色，最后使用<code>Material</code>可以赋给其他 Mesh。</p>
+<h4 id="RWStructuredBuffer-Example"><a href="#RWStructuredBuffer-Example" class="headerlink" title="RWStructuredBuffer Example"></a>RWStructuredBuffer Example</h4><p>CS 也可以获取自定义结构体，而不局限于<code>int</code>这样的基本类型。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> kernel CSMain</span><br><br><span class="hljs-keyword">struct</span> ParticleData &#123;<br>	float3 pos;<br>	float4 color;	<br>&#125;;<br><br>RWStructuredBuffer&lt;ParticleData&gt; ParticleBuffer;<br><br><span class="hljs-built_in">float</span> time;<br><br>[<span class="hljs-meta">numthreads(10,10,10)</span>]<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CSMain</span>(<span class="hljs-params">uint3 gid : SV_GroupID, <span class="hljs-built_in">uint</span> index : SV_GroupIndex</span>)</span><br>&#123;<br>	<span class="hljs-built_in">int</span> pindex = gid.x * <span class="hljs-number">1000</span> + index;<br>	<br>	<span class="hljs-built_in">float</span> x = sin(index);<br>	<span class="hljs-built_in">float</span> y = sin(index * <span class="hljs-number">1.2f</span>);<br>	float3 forward = float3(x, y, -sqrt(<span class="hljs-number">1</span> - x * x - y * y));<br>	ParticleBuffer[pindex].color = float4(forward.x,forward.y,cos(index) * <span class="hljs-number">0.5f</span> + <span class="hljs-number">0.5f</span>, <span class="hljs-number">1</span>);<br>	<span class="hljs-keyword">if</span>(time &gt; gid.x)<br>		ParticleBuffer[pindex].pos += forward * <span class="hljs-number">.005</span>f;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>计算后的结果如何使用？这就需要使用<code>Shader</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs ShaderLab">Shader &quot;Unlit/ParticleShaderURP&quot;<br>&#123;<br>    SubShader<br>    &#123;<br>        Tags &#123; &quot;RenderPipeline&quot; = &quot;UniversalPipeline&quot; &quot;RenderType&quot; = &quot;Opaque&quot; &#125;<br>        LOD 100<br><br>        Pass<br>        &#123;<br>            HLSLPROGRAM<br>            #pragma vertex vert<br>            #pragma fragment frag<br><br>            #pragma multi_compile_instancing<br>            #include &quot;Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl&quot;<br><br>            struct particleData<br>            &#123;<br>                float3 pos;<br>                float4 color;<br>            &#125;;<br><br>            StructuredBuffer&lt;particleData&gt; _particleDataBuffer;<br><br>            struct Attributes<br>            &#123;<br>                uint vertexID : SV_VertexID;<br>            &#125;;<br><br>            struct Varyings<br>            &#123;<br>                float4 positionHCS : SV_POSITION;<br>                float4 color       : COLOR0;<br>            &#125;;<br><br>            Varyings vert(Attributes IN)<br>            &#123;<br>                Varyings OUT;<br>                particleData p = _particleDataBuffer[IN.vertexID];<br>                float3 worldPos = TransformObjectToWorld(p.pos);<br>                OUT.positionHCS = TransformWorldToHClip(worldPos);<br>                OUT.color = p.color;<br>                return OUT;<br>            &#125;<br><br>            half4 frag(Varyings IN) : SV_Target<br>            &#123;<br>                return IN.color;<br>            &#125;<br>            ENDHLSL<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>接下来需要在 C# 中为<code>RWStructuredBuffer</code>赋值。Unity 提供了 <code>ComputeBuffer</code>类专门实现这类操作。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">StructuredBufferExample</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>	<span class="hljs-keyword">public</span> ComputeShader computeShader;<br>	<span class="hljs-keyword">public</span> Material material;<br>	<span class="hljs-comment">// 结构体数目</span><br>	[<span class="hljs-meta">SerializeField</span>] <span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> _count = <span class="hljs-number">2000</span>;<br>	<span class="hljs-keyword">private</span> <span class="hljs-built_in">int</span> _kernelId;<br>	<span class="hljs-keyword">private</span> ComputeBuffer _buffer;<br>	<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">struct</span> ParticleData &#123;<br>		<span class="hljs-keyword">public</span> vector3 pos;<br>		<span class="hljs-keyword">public</span> Color color;	<br>	&#125;;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span><br>	&#123;<br>		<span class="hljs-comment">// 结构体字节数</span><br>		<span class="hljs-built_in">int</span> stride = UnsafeUtility.SizeOf&lt;ParticleData&gt;();<br>		 <br>		_buffer = <span class="hljs-keyword">new</span> ComputeBuffer(_count, stride);<br>		ParticleData[] particleDatas = <span class="hljs-keyword">new</span> ParticleData[count];<br>		_buffer.SetData(particleDatas);<br>		_kernelId = computeShader.FindKernel(<span class="hljs-string">&quot;CSMain&quot;</span>);<br>	&#125;<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span>()</span><br>	&#123;<br>		computeShader.SetBuffer(_kernelId, <span class="hljs-string">&quot;ParticleBuffer&quot;</span>, _buffer);<br>		computeShader.SetFloat(<span class="hljs-string">&quot;time&quot;</span>,Time.time);<br>		computeShader.Dispatch(_kernelId, _count/<span class="hljs-number">1000</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>);<br>		material.SetBuffer(<span class="hljs-string">&quot;_particleDataBuffer&quot;</span>,_buffer);<br>	&#125;<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnRenderObject</span>()</span><br>	&#123;<br>		material.SetPass(<span class="hljs-number">0</span>);<br>		Graphics.DrawProceduralNow(MeshTopology.Points,_count);<br>	&#125;<br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>	&#123;<br>		<span class="hljs-keyword">if</span>(_buffer) _buffer.Release(); <br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="ComputeBuffer"><a href="#ComputeBuffer" class="headerlink" title="ComputeBuffer"></a>ComputeBuffer</h4><p>上面使用 ComputeBuffer 使 C# 脚本能够与 CS 、 Shader 沟通，但是并没有设置 ComputeBuffer 的类型。</p>
+<p>实际上， Unity 的 ComputeBuffer 类拥有一系列类型<code>ComputeBufferType.XXX</code>，这些类型为 CS 提供了对应的 ComputeBuffer 修改方法：</p>
+<table>
+<thead>
+<tr>
+<th align="center">ComputeBufferType</th>
+<th align="center">内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Default</td>
+<td align="center">ComputeBuffer的默认类型，对应HLSL shader中的StructuredBuffer或RWStructuredBuffer，常用于自定义Struct的Buffer传递。</td>
+</tr>
+<tr>
+<td align="center">Raw</td>
+<td align="center">Byte Address Buffer，把里面的内容（byte）做偏移，可用于寻址。它对应HLSL shader中的 ByteAddressBuffer 或RWByteAddressBuffer，用于着色器访问的底层DX11格式为无类型的R32。</td>
+</tr>
+<tr>
+<td align="center">Append</td>
+<td align="center">Append and Consume Buffer，允许我们像处理 Stack 一样处理 Buffer，例如动态添加和删除元素。它对应 HLSL shader 中的AppendStructuredBuffer 或 ConsumeStructuredBuffer。</td>
+</tr>
+<tr>
+<td align="center">Counter</td>
+<td align="center">用作计数器，可以为 RWStructuredBuffer 添加一个计数器，然后在ComputeShader 中使用 IncrementCounter 或 DecrementCounter 方法来增加或减少计数器的值。由于 Metal 和 Vulkan 平台没有原生的计数器，因此我们需要一个额外的小buffer用来做计数器。</td>
+</tr>
+<tr>
+<td align="center">Constant</td>
+<td align="center">constant buffer (uniform buffer)，该 buffer 可以被当做 Shader.SetConstantBuffer 和 Material.SetConstantBuffer 中的参数。如果想要绑定一个 structured buffer 那么还需要添加ComputeBufferType.Structured，但是在有些平台（例如 DX11）不支持一个 buffer 即是 constant 又是 structured 的。</td>
+</tr>
+<tr>
+<td align="center">Structured</td>
+<td align="center">如果没有使用其他的 ComputeBufferType 那么等价于 Default。</td>
+</tr>
+<tr>
+<td align="center">IndirectArguments</td>
+<td align="center">被用作 Graphics.DrawProceduralIndirect，ComputeShader.DispatchIndirect 或Graphics.DrawMeshInstancedIndirect 这些方法的参数。buffer 大小至少要 12 字节，DX11底层 UAV 为 R32_UINT，SRV 为无类型的 R32。</td>
+</tr>
+</tbody></table>
+<p>注意：Default，Append，Counter，Structured对应的Buffer每个元素的大小，也就是stride的值应该是4的倍数且小于2048。</p>
+<p>同一块带 UAV 的 StructuredBuffer 可以被绑定到：</p>
+<ul>
+<li><code>AppendStructuredBuffer</code>：可以使用<code>.Append()</code>方法推入元素。</li>
+<li><code>ConsumeStructuredBuffer</code>：可以使用<code>.Consume()</code>方法弹出元素。</li>
+</ul>
+<p>上述 Default Raw Append Counter 都是自带计数器，可以绑定到<code>RW/Append/Consum StructuredBuffer</code>。</p>
+<p>下面的例子介绍了如何计数以及如何获取计数。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> kernel CSMain</span><br><br><span class="hljs-keyword">struct</span> Particle &#123;<br>    float3 pos;<br>    <span class="hljs-built_in">float</span> life;<br>&#125;;<br><br>ConsumeStructuredBuffer&lt;Particle&gt; inputParticles;  <span class="hljs-comment">// 消费输入</span><br>AppendStructuredBuffer&lt;Particle&gt; outputParticles;  <span class="hljs-comment">// 追加输出</span><br><br>[<span class="hljs-meta">numthreads(64,1,1)</span>]<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CSMain</span>()</span> &#123;<br>    <span class="hljs-comment">// 消费一个粒子（线程安全，每个粒子只被消费一次）</span><br>    Particle p = inputParticles.Consume();<br><br>    <span class="hljs-comment">// 简单处理：更新位置 + 减少生命</span><br>    p.pos += float3(<span class="hljs-number">0.1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>    p.life -= <span class="hljs-number">0.1</span>;<br><br>    <span class="hljs-comment">// 只保留活着的粒子</span><br>    <span class="hljs-keyword">if</span> (p.life &gt; <span class="hljs-number">0</span>) &#123;<br>        outputParticles.Append(p);  <span class="hljs-comment">// 追加到输出</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ConsumeAppendExample</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> ComputeShader shader;<br>    ComputeBuffer inputBuffer;<br>    ComputeBuffer outputBuffer;<br>    ComputeBuffer argsBuffer;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        <span class="hljs-built_in">int</span> count = <span class="hljs-number">100</span>;<br>        <span class="hljs-built_in">int</span> stride = <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">float</span>) * <span class="hljs-number">4</span>; <br>        <br>        <span class="hljs-comment">// 创建输入数据</span><br>        Particle[] particles = <span class="hljs-keyword">new</span> Particle[count];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; count; i++)<br>        &#123;<br>            particles[i] = <span class="hljs-keyword">new</span> Particle<br>            &#123;<br>                pos = UnityEngine.Random.insideUnitSphere,<br>                life = UnityEngine.Random.Range(<span class="hljs-number">0.5f</span>, <span class="hljs-number">1.0f</span>)<br>            &#125;;<br>        &#125;<br><br>        <span class="hljs-comment">// 创建 Consume 缓冲区</span><br>        inputBuffer = <span class="hljs-keyword">new</span> ComputeBuffer(count, stride, ComputeBufferType.Default);<br>        inputBuffer.SetData(particles);<br><br>        <span class="hljs-comment">// 创建 Append 缓冲区</span><br>        outputBuffer = <span class="hljs-keyword">new</span> ComputeBuffer(count, stride, ComputeBufferType.Append);<br>        <span class="hljs-comment">// 初始化计数器的值</span><br>        outputBuffer.SetCounterValue(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-built_in">int</span> kernel = shader.FindKernel(<span class="hljs-string">&quot;CSMain&quot;</span>);<br>        shader.SetBuffer(kernel, <span class="hljs-string">&quot;inputParticles&quot;</span>, inputBuffer);   <br>        shader.SetBuffer(kernel, <span class="hljs-string">&quot;outputParticles&quot;</span>, outputBuffer); <br>        <br>        shader.Dispatch(kernel, Mathf.CeilToInt(count / <span class="hljs-number">64.0f</span>), <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);<br><br>        <span class="hljs-comment">// 获取输出数量</span><br>        argsBuffer = <span class="hljs-keyword">new</span> ComputeBuffer(<span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">int</span>), ComputeBufferType.IndirectArguments);<br>        ComputeBuffer.CopyCount(outputBuffer, argsBuffer, <span class="hljs-number">0</span>);<br>        <span class="hljs-built_in">int</span>[] <span class="hljs-keyword">args</span> = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span>[<span class="hljs-number">1</span>];<br>        argsBuffer.GetData(<span class="hljs-keyword">args</span>);<br>        Debug.Log(<span class="hljs-string">&quot;输出粒子数量: &quot;</span> + <span class="hljs-keyword">args</span>[<span class="hljs-number">0</span>]);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        inputBuffer?.Release();<br>        outputBuffer?.Release();<br>        argsBuffer?.Release();<br>    &#125;<br><br>    <span class="hljs-keyword">struct</span> Particle<br>    &#123;<br>        <span class="hljs-keyword">public</span> Vector3 pos;<br>        <span class="hljs-keyword">public</span> <span class="hljs-built_in">float</span> life;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 C# 中的代码有两点需要注意：</p>
+<ul>
+<li><code>SetCounterValue(0)</code>：要使用计数器需要提前初始化计数器。</li>
+<li><code>ComputeBuffer.CopyCount()</code>：获取计数，需要通过一个<code>IndirectArguments</code>类型的 ComputeBuffer 间接获取计数，否则直接使用<code>GetData</code>会直接获取数据数组而不知道其长度。</li>
+</ul>
+<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><p>通过<code>groundshared</code>关键字声明的变量会被放入共享内存中，线程对其的访问几乎与硬件缓存一样快。常常用于缓存像素值，避免不同线程重复采样。</p>
+<p>Direct3D 11以来，共享内存支持的最大大小为32kb（之前的版本是16kb），并且单个线程最多支持对共享内存进行256byte的写入操作。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cs">Texture2D input;<br>groupshared float4 cache[<span class="hljs-number">256</span>];<br><br>[<span class="hljs-meta">numthreads(256, 1, 1)</span>]<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CS</span>(<span class="hljs-params">int3 groupThreadID : SV_GroupThreadID, int3 dispatchThreadID : SV_DispatchThreadID</span>)</span><br>&#123;<br>    cache[groupThreadID.x] = input[dispatchThreadID.xy];<br>    <br>	<span class="hljs-comment">// 同步等待组内所有线程到达，并确保内存的写入对后续读取可见。</span><br>    GroupMemoryBarrierWithGroupSync();<br>	<br>	<span class="hljs-comment">// 安全读取</span><br>    float4 left = cache[groupThreadID.x - <span class="hljs-number">1</span>];<br>    float4 right = cache[groupThreadID.x + <span class="hljs-number">1</span>];<br>    ......<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>GroupMemoryBarrierWithGroupSync()</code>强制同步等待线程组内所有线程完成，一般会导致线程空转。</p>
+<h3 id="shader-变体"><a href="#shader-变体" class="headerlink" title="shader 变体"></a>shader 变体</h3><p>CS同样支持<a href="https://link.zhihu.com/?target=https://docs.unity3d.com/2020.3/Documentation/Manual/SL-MultipleProgramVariants.html">shader变体</a>，用法和普通的shader变体基本相似，示例如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> kernel CSMain</span><br><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> multi_compile __ COLOR_WHITE COLOR_BLACK</span><br><br>RWTexture2D&lt;float4&gt; Result;<br><br>[<span class="hljs-meta">numthreads(8,8,1)</span>]<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CSMain</span> (<span class="hljs-params">uint3 id : SV_DispatchThreadID</span>)</span><br>&#123;<br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(COLOR_WHITE)</span><br>	Result[id.xy] = float4(<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>);<br><span class="hljs-meta">#<span class="hljs-keyword">elif</span> defined(COLOR_BLACK)</span><br>	Result[id.xy] = float4(<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>);<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br>	Result[id.xy] = float4(id.x &amp; id.y, (id.x &amp; <span class="hljs-number">15</span>) / <span class="hljs-number">15.0</span>, (id.y &amp; <span class="hljs-number">15</span>) / <span class="hljs-number">15.0</span>, <span class="hljs-number">0.0</span>);<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后我们就可以在C#端启用或禁用某个变体了：</p>
+<ul>
+<li><code>#pragma multi_compile</code>声明的全局变体可以使用<code>Shader.EnableKeyword/Shader.DisableKeyword</code>或者<code>ComputeShader.EnableKeyword/ComputeShader.DisableKeyword</code></li>
+<li><code>#pragma multi_compile_local</code>声明的局部变体可以使用<code>ComputeShader.EnableKeyword/ComputeShader.DisableKeyword</code></li>
+</ul>
+<p>示例如下：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">DrawParticle</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> ComputeShader computeShader;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span> &#123;<br>        ......<br>        computeShader.EnableKeyword(<span class="hljs-string">&quot;COLOR_WHITE&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/368307575">【Unity】 Compute Shader的基础介绍与使用 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Manual/class-ComputeShader.html">Unity - Manual: Compute shaders</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+        <a href="/tags/ComputeShader/" class="print-no-link">#ComputeShader</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Unity Compute Shader</div>
+      <div>http://example.com/2026/03/24/ComputeShader/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Beitragsautor</div>
+          <div>MKY42</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Veröffentlicht am</div>
+          <div>March 24, 2026</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Urheberrechtshinweis</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/25/Job%20System/" title="Job System">
+                        <span class="hidden-mobile">Job System</span>
+                        <span class="visible-mobile">Nächster</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Inhaltsverzeichnis</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Suchen</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Stichwort</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog funktioniert am besten mit aktiviertem JavaScript</div>
+  </noscript>
+</body>
+</html>

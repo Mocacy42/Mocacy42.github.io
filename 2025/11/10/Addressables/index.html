@@ -1,0 +1,1236 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/author.png">
+  <link rel="icon" href="/img/author.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="MKY42">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234&#x2F;&#x2F; 加载资源GameObject prefab &#x3D; Resources.Load&lt;GameObject&gt;(&quot;Characters&#x2F;MyCharacter&quot;);&#x2F;&#x2F; 卸载资源Resour">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity的Addressables">
+<meta property="og:url" content="http://example.com/2025/11/10/Addressables/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234&#x2F;&#x2F; 加载资源GameObject prefab &#x3D; Resources.Load&lt;GameObject&gt;(&quot;Characters&#x2F;MyCharacter&quot;);&#x2F;&#x2F; 卸载资源Resour">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/img/Addressables/AddressableAssetSettings.png">
+<meta property="og:image" content="http://example.com/img/Addressables/ContentPacking&Loading.png">
+<meta property="og:image" content="http://example.com/img/Addressables/AdvancedOptions.png">
+<meta property="og:image" content="http://example.com/img/Addressables/ContentUpdateRestrictionSchemaReference.png">
+<meta property="og:image" content="http://example.com/img/Addressables/ProfileWindow.png">
+<meta property="og:image" content="http://example.com/img/Addressables/ReferenceMultipleImplicitAsset.png">
+<meta property="article:published_time" content="2025-11-09T17:52:00.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:23:03.942Z">
+<meta property="article:author" content="MKY42">
+<meta property="article:tag" content="Addressables">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="动态资源管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/Addressables/AddressableAssetSettings.png">
+  
+  
+  
+  <title>Unity的Addressables - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Startseite</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archiv</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Kategorien</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Schlagwörter</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>Über</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Startseite</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archiv</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Kategorien</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Schlagwörter</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>Über</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Suchen</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Hell"
+               data-label-dark="Dunkel">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dunkel</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Unity的Addressables"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-10 01:52" pubdate>
+          November 10, 2025 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          28k wörter
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          237 minuten
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Unity的Addressables</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Addressables可寻址资源管理系统"><a href="#Addressables可寻址资源管理系统" class="headerlink" title="Addressables可寻址资源管理系统"></a>Addressables可寻址资源管理系统</h1><h2 id="1-传统资源管理方式Resouces"><a href="#1-传统资源管理方式Resouces" class="headerlink" title="1. 传统资源管理方式Resouces"></a>1. 传统资源管理方式<code>Resouces</code></h2><p>传统的资源加载方式一般通过将资源放置在一个特殊的<code>Resource</code>文件夹中，使用如下方式使用：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-comment">// 加载资源</span><br>GameObject prefab = Resources.Load&lt;GameObject&gt;(<span class="hljs-string">&quot;Characters/MyCharacter&quot;</span>);<br><span class="hljs-comment">// 卸载资源</span><br>Resources.UnloadAsset(prefab);<br></code></pre></td></tr></table></figure>
+
+<p>使用<code>Resources</code>方式管理资源有几点缺点：</p>
+<ul>
+<li>内存管理十分不灵活，容易造成内存泄漏或资源丢失。</li>
+<li>无法热更新。所有资源在构建时会被打包一个特殊不变归档文件中，无法在资源发布后更改。</li>
+<li><code>Resources</code>文件增大会直接影响游戏启动速度。</li>
+<li>一切资源，只要存在于<code>Resources</code>文件夹中，都会被包含在最终构建中。</li>
+<li></li>
+</ul>
+<h2 id="2-什么是Addressables"><a href="#2-什么是Addressables" class="headerlink" title="2. 什么是Addressables"></a>2. 什么是Addressables</h2><p><code>Addressables Asset System</code>是Unity开发的资源管理插件，主要用于运行时游戏资源的加载和卸载。资源（例如预制件）标记为“可寻址”后，就会生成一个可从任何地方调用的地址。无论资源位于何处（本地还是远程），系统都会找到资源及其依赖项，然后将其返回。<br><code>Addressable</code>相比与<code>Resources</code>的优势在于：</p>
+<ul>
+<li>灵活的打包模式：<ul>
+<li>Packed Together：组内所有资源打包为一个资源包。</li>
+<li>Separately：每个资源单独打包。</li>
+</ul>
+</li>
+<li>热更新：可以只更新修改过的资源包，避免对所有构建内容一起修改。</li>
+<li>优化异步加载。</li>
+<li></li>
+</ul>
+<h2 id="3-导入Addressables"><a href="#3-导入Addressables" class="headerlink" title="3. 导入Addressables"></a>3. 导入Addressables</h2><p><code>Addressables</code>插件可以在<code>Package Manager</code>中找到。（<code>Addressables.CN</code>增加了对<code>AssetBundle</code>的加密，无法通过<code>AssetStudio</code>工具逆向）。</p>
+<h2 id="4-资源设置"><a href="#4-资源设置" class="headerlink" title="4. 资源设置"></a>4. 资源设置</h2><h3 id="4-1-统一资源管理界面Addressables-Groups"><a href="#4-1-统一资源管理界面Addressables-Groups" class="headerlink" title="4.1 统一资源管理界面Addressables Groups"></a>4.1 统一资源管理界面<code>Addressables Groups</code></h3><p><code>Addressables Groups</code>的概念只存在于<code>Editor</code>中。也就是说无法在代码中根据<code>Groups</code>获取资源。但是可以通过使用给一个组的所有资源添加<code>Label</code>管理。<br>通过下列目录结构创建<code>Addressables Groups</code>。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">Window<br><span class="hljs-bullet">-</span> Asset Management<br><span class="hljs-bullet">  -</span> Addressables<br><span class="hljs-bullet">    -</span> Groups<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-创建Addressables-Settings"><a href="#4-2-创建Addressables-Settings" class="headerlink" title="4.2 创建Addressables Settings"></a>4.2 创建<code>Addressables Settings</code></h3><ol>
+<li>在<code>Addressables Groups</code>中点击<code>Create Addressables Settings</code></li>
+<li>在<code>Inspector</code>中将任意资源设置为<code>Addressable</code></li>
+</ol>
+<p>工程目录中会出现名为<code>AddressableAssetsData</code>的文件夹，并且<code>Addressables Groups</code>中默认创建组<code>Default Local Group (Default)</code>。<br><code>Addressables</code>通过对每个<code>Group</code>打包为一个或多个<code>AssetBundle</code>。</p>
+<p><img src="/img/Addressables/AddressableAssetSettings.png" srcset="/img/loading.gif" lazyload alt="Addressable Asset Settings"></p>
+<ul>
+<li><code>Profile</code>：选择激活的<code>Profile</code>。</li>
+<li><code>Diagnostics</code>：<ul>
+<li><code>Send Profiler Events</code>：向<code>Unity Profiler</code>发送详细的资源加载&#x2F;卸载事件。</li>
+<li><code>Log Runtime Exception</code>：错误日志开关，控制当资源加载&#x2F;卸载失败时，是否将异常信息记录到<code>Unity Console</code>，发布时最好禁用。</li>
+</ul>
+</li>
+<li><code>Catalog</code>:<ul>
+<li><code>Player Versino Override</code>：控制远程<code>Catalog</code>命名，决定客户端识别不同版本资源目录。</li>
+<li><code>Compression Local Catalog</code>：将 <code>Catalog.json</code>打包成<code>AssetBundle</code>，减小文件体积</li>
+<li><code>Build Remote Catalog</code>：是否生成用于远程加载的<code>Catalog</code>文件，使已安装的应用能够检测并下载更新的资源。</li>
+<li><code>Only update catalogs manually</code>：是否允许自动从远程服务器下载并更新<code>Catalog</code>，禁用后强制所有<code>Catalog</code>更新必须通过代码显式调用。</li>
+</ul>
+</li>
+<li><code>Update a Previous Build</code>：<ul>
+<li><code>Check for Update issues</code>：手动触发内容更新限制检查工具，分析当前项目中哪些资源被修改、哪些资源需要移动到新<code>Bundle</code>或重建。</li>
+<li><code>Content State Build Path</code>：指定 <code>Content Update Build</code>工具用于跟踪资源变更的状态文件的存储路径。</li>
+<li><code>Path Preview</code>：实时显示<code>Build Path</code>和<code>Load Path</code>的实际解析路径，帮助验证配置是否正确。</li>
+</ul>
+</li>
+<li><code>Downloads</code>：<ul>
+<li><code>Custom certificate handler</code>：自定义 <code>SSL/TLS</code> 证书验证逻辑。</li>
+<li><code>Max Concurrent Web Requests</code>：限制同时活跃的<code>UnityWebRequest</code>实例数量</li>
+<li><code>Catalog Download Timeout</code>：设置下载远程<code>Catalog</code>文件的最大等待时间，一般小于<code>Bundle Timeout</code>。</li>
+</ul>
+</li>
+<li>-<code>Build</code>：<ul>
+<li><code>Build Addressables On Player Build</code>：<ul>
+<li><code>Use global Settings</code></li>
+<li><code>Build Addressables content on Player Build</code>：构建时自动执行<code>Addressables</code>构建。</li>
+<li><code>Do not Build Addressables content on Player Build</code>：跳过<code>Addressables</code>构建，使用最后一次手动构建的结果。</li>
+</ul>
+</li>
+<li><code>Ignore Invalid/Unsupported Files in Build</code>： 控制<code>Addressables</code>构建过程中遇到无效或不支持的文件时是忽略并继续构建还是报错终止。</li>
+<li><code>Unique Bundle IDs</code>：开启后<code>Bundle Naming Mode</code>应该使用携带<code>Hash</code>的模式。</li>
+<li><code>Contiguous Bundles</code>：将资源在物理上连续存储，将随机 I&#x2F;O 转换为顺序 I&#x2F;O，对 Requested Asset 模式有巨大性能提升，默认开启。</li>
+<li><code>Non-Recursive Dependency Calculation</code>：控制<code>Bundle</code>依赖关系的计算方式，决定是深度遍历所有依赖还是仅处理直接依赖。默认禁用。</li>
+<li><code>Shader Bundle Naming Prefix</code>：控制着色器<code>AssetBundle</code>命名的设置。</li>
+<li><code>MonoScript Bundle Naming Prefix</code>：控制<code>MonoScript AssetBundle</code>命名的设置。<code>MonoScript</code>是<code>Unity</code>引擎内部用于表示一个脚本文件本身的类对象，用于创建<code>MonoBehavior</code>实例。</li>
+<li><code>Strip Unity Version from AssetBundle</code>：开启后，序列化文件头中的版本号会被写成 <code>0.0.0</code>，使得不同<code>Unity</code>小版本间、内容完全相同的<code>Bundle</code>得到一致的<code>CRC</code>，从而避免玩家因版本升级而被迫全量重新下载。</li>
+<li><code>Disable Visible Sub Asset Representations</code>：阻止子资源被单独打包。</li>
+</ul>
+</li>
+<li><code>Build and Play Mode Scripts</code>：构建以及<code>Play Mode Scripts</code>配置文件。</li>
+<li><code>Asset Group Templates</code>：包含所有<code>Asset Group Templates</code>。</li>
+<li><code>initialzation Objects</code>：配置项目的初始化对象。初始化对象是实现了<code>IObjectInitializationDataProvider</code>接口的<code>ScriptableObject</code>类。可以在运行时创建这些对象以向<code>Addressables</code>初始化过程传递数据。</li>
+<li><code>Cloud Content Delivery</code>：<ul>
+<li><code>Enable CCD Features</code>：开启<code>Unity</code>云内容分发（<code>Cloud Content Delivery, CCD</code>） 集成开关。打开后，会在构建时自动把资源包上传到在 <code>Unity Dashboard</code>创建的<code>CCD</code>存储桶（<code>bucket</code>），并生成远程目录，而不再需要手动用<code>CLI</code> 或网页传包。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-3-将资源设置为Addressables"><a href="#4-3-将资源设置为Addressables" class="headerlink" title="4.3 将资源设置为Addressables"></a>4.3 将资源设置为<code>Addressables</code></h3><p>两种方式：</p>
+<ul>
+<li>在资源的<code>Inspector</code>窗口设置为<code>Addressable</code>。</li>
+<li>将资源直接拖入<code>Addressables Groups</code>窗口的组中。</li>
+</ul>
+<p>注意：<code>Addressables</code>对于代码无效。</p>
+<h3 id="4-4-对组的操作"><a href="#4-4-对组的操作" class="headerlink" title="4.4 对组的操作"></a>4.4 对组的操作</h3><p><code>Group</code>的本质是<code>AddressableAssetsData</code>下的<code>ScriptObject</code>配置文件，使用<code>YAML</code>格式描述信息。</p>
+<ul>
+<li>在<code>Create</code>选项中创建组：<ul>
+<li><code>Packed Assets</code>：打包资源分组（自带默认打包加载相关设置信息）。</li>
+<li><code>Blank(no schema)</code>：空白（打包加载相关设置信息需哎哟自己关联）。</li>
+</ul>
+</li>
+<li><code>Remove Group</code>：移除组，将组中所有资源变为不可寻址资源。</li>
+<li><code>Simplify Addressable Names</code>：简化可寻址名称。</li>
+<li><code>Set as Default</code>：设置为默认组，当直接勾选资源的<code>Addressable</code>时会添加进默认组。</li>
+<li><code>Rename</code>：重命名。</li>
+<li><code>Create New Group</code>：创建新组</li>
+</ul>
+<p>下面将介绍<code>Addressables Groups</code>对应的配置<code>ScriptObject</code>。</p>
+<h4 id="Content-Packing-Loading"><a href="#Content-Packing-Loading" class="headerlink" title="Content Packing &amp; Loading"></a><code>Content Packing &amp; Loading</code></h4><p><img src="/img/Addressables/ContentPacking&Loading.png" srcset="/img/loading.gif" lazyload alt="Content Packing &amp; Loading"></p>
+<p><code>Build &amp; Load Paths</code>是一组配置路径对，定义了<code>Addressables</code>构建和加载路径。<br>可以选择<code>Local</code>、<code>Remote</code>和<code>Custom</code>三种模式。</p>
+<h4 id="Advanced-Options"><a href="#Advanced-Options" class="headerlink" title="Advanced Options"></a><code>Advanced Options</code></h4><p><img src="/img/Addressables/AdvancedOptions.png" srcset="/img/loading.gif" lazyload alt="Advanced Options"></p>
+<ul>
+<li><code>Asset Bundle Compresson</code>：指示了该包的压缩方式。</li>
+<li><code>Include in Build</code>：决定该组资源是否打包进最终游戏构建，如果设置为<code>false</code>需要远程打包，适用于游戏DLC热更新。</li>
+<li><code>Force Unique Provider</code>：该组会创建独立<code>Provider</code>实例，使用独特资源加载逻辑。</li>
+<li><code>Use Asset Bundle Cache</code>：缓存远程资源，加速下一次加载。</li>
+<li><code>Asset Bundle CRC</code>：加载前验证完整性。</li>
+<li><code>Use UnityWebRequest for Local Asset Bundles</code>：是否使用 <code>UnityWebRequest</code> 替代默认的 <code>AssetBundle.LoadFromFileAsync</code> 来加载本地<code>Bundle</code>。</li>
+<li><code>Request Timeout</code>：控制<code>UnityWebRequest</code>最大等待时间。</li>
+<li><code>Use Http Chunked Transfer</code>：是否使用 HTTP &#x2F;1.1分块传输编码（<code>Chunked Transfer Encoding</code>）下载远程 <code>AssetBundle</code>。</li>
+<li><code>Http Redirect Limit</code>：控制 <code>UnityWebRequest</code> 在下载远程 <code>AssetBundle</code> 或 <code>Catalog</code> 时允许跟随 HTTP 重定向的最大次数。</li>
+<li><code>Retry Count</code>：控制当远程资源加载失败时（超时、网络错误、HTTP 错误等），自动重新尝试的最大次数。</li>
+<li><code>Include Addresses in Catalog</code>：是否在 <code>Addressables Catalog</code>文件中包含资源的地址字符串（<code>Address</code>），用于减小 Catalog 文件体积，禁用后无法通过地址字符串加载。</li>
+<li><code>Include GUIDs in Catalog</code>：禁用后无法通过<code>AssetReference</code>加载。</li>
+<li><code>Include Labels in Catalog</code>：禁用后无法通过<code>Label</code>加载。</li>
+<li><code>Internal Asset Naming Mode</code>：决定资源在 <code>AssetBundle</code> 内部 和 <code>Catalog</code> 中如何被标识和命名。</li>
+<li><code>Internal Bundle Id Mode</code>：决定 <code>AssetBundle</code> 在内部如何被唯一标识。</li>
+<li><code>Cache Clear Behavior</code>：决定已安装的应用程序何时从设备缓存中清除 <code>AssetBundle</code>文件。</li>
+<li><code>Bundle Mode</code>：控制组打包模式，可以组内资源打包为一个<code>AssetBundle</code>,亦可以每个资源单独打包为<code>AssetBundle</code>，还可以按照<code>Label</code>打包为多个<code>AssetBundle</code>。</li>
+<li><code>Bundle Naming Mode</code>：控制<code>AssetBundle</code>文件名的命名规则。<code>Filename</code>模式仅限开发使用，因为容易违背<code>Unique Bundle IDs</code>功能。</li>
+<li><code>Asset Load Mode</code>：决定加载资源时是按需加载还是全量加载。</li>
+<li><code>Asset Provider</code>：决定了资源加载到内存时使用的底层提供程序<code>Provider</code>类型。使用<code>Bundled Asset Provider</code>后底层会使用<code>AssetBundle.LoadFromFile</code>加载整个<code>Bundle</code>（适合旧项目迁移）。</li>
+<li><code>Asset Bundle Provider</code>：底层加载器，决定如何从磁盘或网络加载 <code>AssetBundle</code> 文件本身（<code>.bundle</code> 文件）。同上，一样作为旧项目迁移手段时使用<code>Bundle Asset Provider</code>模式。</li>
+</ul>
+<h4 id="Content-Update-Restriction-schema-reference"><a href="#Content-Update-Restriction-schema-reference" class="headerlink" title="Content Update Restriction schema reference"></a>Content Update Restriction schema reference</h4><p><img src="/img/Addressables/ContentUpdateRestrictionSchemaReference.png" srcset="/img/loading.gif" lazyload alt="Content Update Restriction schema reference"></p>
+<p>控制内容热更新构建时资源的处理策略，决定修改过的资源是移动到新<code>Bundle</code>还是原地重建整个<code>Bundle</code>。</p>
+<ul>
+<li><code>Prevent Updates = Enabled</code>：不移动资源而是重建整个<code>Bundle</code>。</li>
+<li><code>Prevent Updates = Disabled</code>：修改资源时，<code>Check for Content Update Restrictions</code>工具会将修改的资源移动到新组<code>GroupName_Update</code>，配置为远程加载。</li>
+</ul>
+<p>注意：设置该项，并且完整构建<code>Build</code>后，应该保证该项不变，否则无法生成正确变更。</p>
+<h3 id="4-5-对Addressables资源的操作"><a href="#4-5-对Addressables资源的操作" class="headerlink" title="4.5 对Addressables资源的操作"></a>4.5 对<code>Addressables</code>资源的操作</h3><ul>
+<li><code>Move Addressables to Group</code>：将资源移入另一个组。</li>
+<li><code>Move Addressables to New Group</code>：新建组并移入资源。</li>
+<li><code>Remove Addressables</code>：移除资源，将其变为不可寻址资源（取消<code>Addressable</code>）。</li>
+<li><code>Simplify Addressables Names</code>：删除路径和拓展，简化名称。</li>
+<li><code>Copy Address to Clipboard</code>：复制地址名称至剪切板。</li>
+<li><code>Change Address</code>：为资源改名。</li>
+<li><code>Create New Group</code>：创建新组。</li>
+<li>可以为每一个<code>Addressable</code>资源添加标签<code>Label</code>。</li>
+</ul>
+<p><code>Addressables</code>依赖资源路径寻找资源，因此资源可以同名，但是路径不可相同。</p>
+<h3 id="4-6-Label标签"><a href="#4-6-Label标签" class="headerlink" title="4.6 Label标签"></a>4.6 <code>Label</code>标签</h3><p>可以为每一个<code>Asset</code>设置一个或多个<code>Label</code>。<br>在<code>Addressables</code>中，<code>Label</code>有以下功能：</p>
+<ul>
+<li>代码中通过<code>Label</code>寻找<code>Asset</code>。</li>
+<li>根据<code>Label</code>将一个<code>Group</code>构建为多个<code>AssetBundle</code>。</li>
+<li>在<code>Group Window</code>中的过滤器中根据<code>Label</code>迅速查找<code>Asset</code>。</li>
+</ul>
+<h3 id="4-7-配置概述相关Profile"><a href="#4-7-配置概述相关Profile" class="headerlink" title="4.7 配置概述相关Profile"></a>4.7 配置概述相关<code>Profile</code></h3><p><code>Profile</code>定义了一系列供<code>Addressables build scripts</code>使用的变量，可以为项目自定义多个<code>profile</code>用于开发、测试、发布阶段。</p>
+<p><img src="/img/Addressables/ProfileWindow.png" srcset="/img/loading.gif" lazyload alt="Profile Window"></p>
+<p><code>Manage Profile</code>：使用<code>Addressables Profiles</code>窗口管理配置文件（可以配置打包目标、本地远程打包加载路径等信息）。</p>
+<ul>
+<li><code>BuildTarget</code>：<code>[UnityEditor.EditorUserBuildSettings.activeBuildTarget]</code>，设置了构建目标，一般为<code>Android</code>或<code>StandaloneWindows64</code>。</li>
+<li><code>Local.BuildPath</code>：<code>[UnityEditor.AddressableAssets.Addressables.BuildPath]/[BuildTarget]</code>，定义了资源构建本地路径。</li>
+<li><code>Local.LoadPath</code>：<code>｛UnityEngine.AddressableAssets.Addressables.RuntimePath｝/[BuildTarget]</code>，定义了资源加载路径，默认情况下位于<code>StreamingAssets</code>中。</li>
+<li><code>Remote.BuildPath</code>：<code>ServerData/[BuildTarget]</code>，定义了远程分发时要将资源文件构建的目标路径。</li>
+<li><code>Remote.LoadPath</code>：<code>http://localhost/[BuildTarget]</code>，定义了从哪个<code>URL</code>上下载资源。</li>
+</ul>
+<p>这是默认<code>path values</code>，<code>Unity</code>的<code>build system</code>期望将<code>AssetBundles</code>和其他文件放在默认位置，如果更改了本地路径，需要在构建前将文件从构建路径复制到加载路径并且加载路径应该始终位于<code>StreamingAsset</code>文件夹内。</p>
+<p>除了这些变量外，也可以创建自定义的变量和路径对。</p>
+<ul>
+<li><code>[]</code>表示构建期间内容，可以是其他配置条目<code>BuildTarget</code>或者代码变量<code>[UnityEditor.EditorUserBuildSettings.activeBuildTarget]</code>。</li>
+<li><code>{}</code>表示运行期间内容，可以是运行时类的代码变量，如<code>{UnityEngine.AddressableAssets.Addressables.RuntimePath}</code>。</li>
+</ul>
+<p>一般来说，设置为<code>{MyNamespace.MyClass.MyURL}/content/[BuildTarget]</code>的加载路径对应构建期间<code>catalog</code>的加载路径为<code>{MyNamespace.MyClass.MyURL}/content/Android/*.bundle</code>，<code>[BuildTarget]</code>为<code>Android</code>。运行期间，最终加载路径为<code>http://xxx.com/content/Android/*。bundle</code>。</p>
+<p>在开发阶段，<code>LocalBundles</code>和<code>RemoteBundles</code>都在本地路径存储，可以都使用<code>Built-In</code>模式。<br>后期将<code>RemoteBundles</code>移动到服务器端，可以更改<code>Remote.LoadPath</code>为服务器地址。</p>
+<p>在构建期间，<code>Addressables</code>系统仅将数据从<code>Addressables.BuildPath</code>复制到<code>StreamingAssets</code>文件夹。它不处理通过<code>LocalBuildPath</code>或<code>LocalLoadPath</code>变量指定的任意路径。如果你将数据构建到默认位置以外的位置，或者从默认位置以外的位置加载数据，你必须手动复制数据。<br>类似地，你必须手动将远程<code>AssetBundles</code>及其相关的目录和哈希文件上传到你的服务器，以便它们可以通过<code>RemoteLoadPath</code>定义的URL被访问。</p>
+<h3 id="4-8-工具相关"><a href="#4-8-工具相关" class="headerlink" title="4.8 工具相关"></a>4.8 工具相关</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">Tools<br>- Inspect <span class="hljs-keyword">System</span> Settings 选中配置文件<br>- <span class="hljs-keyword">Check</span> <span class="hljs-keyword">for</span> Content <span class="hljs-keyword">Update</span> Restrictions 检查内容更新限制<br>- <span class="hljs-keyword">Window</span> Addressables 窗口相关<br>    Profiles<br>    Labels<br>    <span class="hljs-keyword">Analyze</span><br>    Hosting Services<br>    Event Viewer<br>-<span class="hljs-keyword">Groups</span> <span class="hljs-keyword">view</span> 分组视图<br>	<span class="hljs-keyword">Show</span> Sprite <span class="hljs-keyword">and</span> Subobject Addresses 显示可寻址对象的Sprite和子对象，如图集资源等。<br>    <span class="hljs-keyword">Group</span> Hierarchy <span class="hljs-keyword">with</span> Dashes 组层次结构<br></code></pre></td></tr></table></figure>
+<h3 id="4-9-Play-Mode-Script"><a href="#4-9-Play-Mode-Script" class="headerlink" title="4.9 Play Mode Script"></a>4.9 <code>Play Mode Script</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">Play Mode Script<br>- Use Asset <span class="hljs-title function_">Database</span> <span class="hljs-params">(fast)</span><br>- Simulate <span class="hljs-title function_">Groups</span> <span class="hljs-params">(Advanced)</span><br>- Use Existing <span class="hljs-title function_">Build</span> <span class="hljs-params">(<span class="hljs-keyword">requires</span> built groups)</span><br></code></pre></td></tr></table></figure>
+<p><code>play Mode Script</code>决定了在编辑器播放模式下运行游戏时，可寻址系统如何访问资源。</p>
+<ul>
+<li><code>Use Asset Database (fast)</code>：使用资源数据库，一般在开发阶段使用，不必构建打包；实际开发基本不使用。</li>
+<li><code>Simulate Groups (Advanced)</code>：测试阶段使用，通过<code>ResourceManager</code>从资产数据库加载资产，引入时间延迟，模拟远程资产绑定的下载速度和本地绑定的文件加载速度，实际未绑定资产，以脚本方式加载资源。实际开发中常常使用该模式。</li>
+<li><code>Use Existing Build (requires built groups)</code>：最终发布测试阶段使用。使用现有构建，从创建的捆绑包加载资产，使用之前需要用生成脚本打包资源。远程内容需要托管在用于神抽狗内容的配置文件的<code>RemoteLoadPath</code>上。</li>
+</ul>
+<h3 id="4-10-Build-commands"><a href="#4-10-Build-commands" class="headerlink" title="4.10 Build commands"></a>4.10 <code>Build commands</code></h3><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">Build</span><br><span class="hljs-keyword"></span>- New <span class="hljs-keyword">Build</span><br><span class="hljs-keyword"></span>   Default <span class="hljs-keyword">Buid </span><span class="hljs-keyword">Script </span>使用默认打包脚本<br>- Update a Previous <span class="hljs-keyword">Build </span>更新过去版本<br>- Clean <span class="hljs-keyword">Build </span>清空之前的构建资源<br>  - <br></code></pre></td></tr></table></figure>
+
+<h2 id="5-构建Build"><a href="#5-构建Build" class="headerlink" title="5. 构建Build"></a>5. 构建<code>Build</code></h2><h3 id="Unity-Player-Build和Addressable-Build"><a href="#Unity-Player-Build和Addressable-Build" class="headerlink" title="Unity Player Build和Addressable Build"></a><code>Unity Player Build</code>和<code>Addressable Build</code></h3><ul>
+<li><code>Player Build</code>：将项目构建为安装包。</li>
+<li><code>Addressables Build</code>：打包为<code>AssetBundle</code>。</li>
+</ul>
+<p><code>Unity</code>在构建<code>Player Build</code>时：</p>
+<ul>
+<li>如果启用<code>Build Addressables on Player Build</code>，<code>Unity</code>则会在<code>Player Build</code>时先自动执行一次<code>Addressable Build</code>，将结果复制到<code>StreamingAssets</code>文件夹，然后在打包。</li>
+<li>如果启用<code>Do not Build Addressables on Player Build</code>，<code>Unity</code>需要手动进行<code>Addressables Build</code>，<code>Player Build</code>只会将最后一次构建的<code>AssetBundle</code>存入<code>StreamingAssets</code>。</li>
+</ul>
+<p>以上只是<code>Local Content</code>的构建，对于<code>Remote content</code>，需要设置好<code>RemoteLoadPath</code>指定的<code>URL</code>才能在应用安装后下载。</p>
+<p><code>Build commands</code>中使用了<code>Build Script</code>配置具体的<code>Build</code>设置。</p>
+<h3 id="资源依赖"><a href="#资源依赖" class="headerlink" title="资源依赖"></a>资源依赖</h3><h4 id="引用子物件Reference-sub-objects"><a href="#引用子物件Reference-sub-objects" class="headerlink" title="引用子物件Reference sub-objects"></a>引用子物件<code>Reference sub-objects</code></h4><p>如果<code>AssetReference</code>指向<code>Addressable Asset</code>，那么其子对象也会被构建为同一个包内。<br>如果<code>AssetReference</code>指向拥有子对象的父对象如<code>Scene GameObject ScriptObject</code>（其子对象不是<code>Addressable</code>），则只将子对象作为隐式依赖项<code>implicit dependency</code>构建到<code>Bundle</code>中。</p>
+<h4 id="捆绑包依赖AssetBundle-dependencies"><a href="#捆绑包依赖AssetBundle-dependencies" class="headerlink" title="捆绑包依赖AssetBundle dependencies"></a>捆绑包依赖<code>AssetBundle dependencies</code></h4><p>当<code>AssetBundle A</code>引用另一个<code>AssetBundle B</code>中的资源，如<code>Material</code>，就叫<code>AssetBundle dependencies</code>。</p>
+<ul>
+<li>在传统<code>AssetBundle</code>工作流中，此时<code>Unity</code>会生成<code>AssetBundleManifest</code>，需要先根据它加载依赖项。</li>
+<li><code>Addressables</code>会使用<code>Catalog.json</code>记录依赖关系，可以直接使用<code>API</code>而不关心依赖。但是，隐式依赖项无法检测。此外，循环依赖可以被自动检测。</li>
+</ul>
+<h4 id="引用多个隐式资源"><a href="#引用多个隐式资源" class="headerlink" title="引用多个隐式资源"></a>引用多个隐式资源</h4><p><img src="/img/Addressables/ReferenceMultipleImplicitAsset.png" srcset="/img/loading.gif" lazyload alt="Reference Multiple Implicit Asset"></p>
+<p>如果多个可寻址资源引用同一个隐式资源，那么每个包含引用的可寻址资源的 bundle 中都会包含该隐式资源的副本。<br>为防止这种重复，可以将隐式资源设为<code>Addressable</code>资源，并将其包含在现有的<code>AssetBundle</code>中，或添加到不同的<code>AssetBundle</code>中。当加载引用该资源的<code>Addressable</code>时，该资源所在的<code>AssetBundle</code>会被加载。如果<code>Addressable</code>被打包到与被引用资源不同的<code>AssetBundle</code>中，那么包含被引用资源的<code>AssetBundle</code>就是一个<code>AssetBundle</code>依赖。</p>
+<p>非<code>Addressable</code>对象和<code>Addressable</code>对象引用同一份<code>Addressable</code>资源时，他们之间的依赖会导致<code>Unity</code>复制资产；同样，不同<code>Bundle</code>中的<code>Addressable</code>对象引用同一个<code>Addressable</code>对象时也会导致相同的问题。<br>有一些策略可以减轻该问题：</p>
+<ul>
+<li>尽量将<code>Resources</code>文件夹中的资源设置为<code>Addressable</code>。</li>
+<li>尽量保证<code>Shared Addressable Asset</code>位于单独<code>Bundle</code>。</li>
+</ul>
+<h3 id="完整构建New-Build"><a href="#完整构建New-Build" class="headerlink" title="完整构建New Build"></a>完整构建<code>New Build</code></h3><h4 id="构建和加载路径"><a href="#构建和加载路径" class="headerlink" title="构建和加载路径"></a>构建和加载路径</h4><p>本地构建路径默认为<code>Addressables.BuildPath</code>提供的路径，该路径位于<code>Unity</code>项目的<code>Library</code>文件夹中。<code>Addressables</code>会根据你当前的平台构建目标设置在本地构建路径中追加一个文件夹。当你为多个平台构建时，构建会将每个平台的工件放置在不同的子文件夹中。</p>
+<p>同样，本地加载路径默认为<code>Addressables.RuntimePath</code>提供的路径，该路径解析为 <code>StreamingAssets</code>文件夹。<code>Addressables</code>再次将平台构建目标添加到路径中。</p>
+<p>当你将本地资源包构建到默认构建路径时，构建代码在构建<code>Player</code>时会暂时将资源从构建路径复制到<code>StreamingAssets</code>文件夹，并在构建完成后将其删除。</p>
+<p><code>Addressables</code>将默认的远程构建路径设置为任意选择的一个文件夹名称，<code>ServerData</code> ，该文件夹创建在你的项目文件夹下。构建会将当前平台目标作为子文件夹添加到路径中，以分离不同平台的唯一资源。</p>
+<p>默认的远程加载路径是 <code>http://localhost/</code> 加上当前配置文件<code>BuildTarget</code>变量。你必须将此路径更改为你计划加载<code>Addressable</code>资源的基<code>URL</code>。</p>
+<h4 id="设置远程内容构建"><a href="#设置远程内容构建" class="headerlink" title="设置远程内容构建"></a>设置远程内容构建</h4><ol>
+<li><code>Window &gt; Asset Management &gt; Addressables &gt; Settings</code>。</li>
+<li>在<code>Catalog</code>下，开启<code>Build Remote Catalog</code>。</li>
+<li>对于每个组，将<code>Build Path</code>和<code>Load Path</code>设置为<code>RemoteBuildPath</code>和<code>RemoteLoadPath</code>。</li>
+<li><code>Window &gt; Asset Management &gt; Addressables &gt; Profiles</code></li>
+<li>将<code>RemoteLoadPath</code>设置为计划托管远程内容的<code>URL</code>。</li>
+</ol>
+<h4 id="执行构建"><a href="#执行构建" class="headerlink" title="执行构建"></a>执行构建</h4><p>在<code>Group Window</code>选择<code>Build &gt; NewBuild &gt; Default Build Script</code>。</p>
+<h3 id="更新构建Update-Build"><a href="#更新构建Update-Build" class="headerlink" title="更新构建Update Build"></a>更新构建<code>Update Build</code></h3><p><code>Update Build</code>会对先前发布的构建进行差异更新，需要上次完整构建留下的<code>addressables_content_state.bin</code>文件，这个文件默认位置在<code>Assets/AddressableAssetsData/TargetPlatform</code>。</p>
+<p>以下行为会导致<code>MonoScript</code>更新，从而导致需要完整构建<code>Addressables</code>：</p>
+<ul>
+<li>将脚本移动到不同程序集。</li>
+<li>更改程序集定义文件名称。</li>
+<li>添加&#x2F;更改类命名空间。</li>
+<li>更改类名。</li>
+</ul>
+<h3 id="构建脚本Build-Scripting"><a href="#构建脚本Build-Scripting" class="headerlink" title="构建脚本Build Scripting"></a>构建脚本<code>Build Scripting</code></h3><p>叫恩启动构建需要调用方法<code>AddressableAssetSettings.BuildPlayerContent</code>方法，该方法会考虑一下信息：</p>
+<ul>
+<li><code>AddressableAssetSettingsDefaultObject</code></li>
+<li><code>ActivePlayerDataBuilder</code></li>
+<li><code>addressables_content_state.bin</code></li>
+<li></li>
+</ul>
+<h4 id="从脚本构建"><a href="#从脚本构建" class="headerlink" title="从脚本构建"></a>从脚本构建</h4><p>加载自定义设置对象：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getSettingsObject</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> settingsAsset</span>)</span><br>&#123;<br>	<span class="hljs-comment">// Use Default Settings</span><br>	settings = AddressableAssetSettingsDefaultObject.Settings;<br>	<br>	<span class="hljs-comment">// Use Custom Settings</span><br>	settings = AssetDatabase.LoadAssetAtPath&lt;ScriptableObject&gt;(settingAsset) <br>		<span class="hljs-keyword">as</span> AddressableAssetSettings;<br>		<br>	<span class="hljs-keyword">if</span>(settings == <span class="hljs-literal">null</span>) Debug.Log(<span class="hljs-string">$&quot;<span class="hljs-subst">&#123;settingsAsset&#125;</span> couldn&#x27;t be found or isn&#x27;t a settings object.&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>设置配置文件：<code>settings</code>包含<code>profile</code>列表，根据名称获取指定<code>profileId</code>并将该<code>profile</code>设置为<code>active</code>活动配置文件：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setProfile</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> profile</span>)</span><br>&#123;<br>	<span class="hljs-built_in">string</span> profileId = settings.profileSettings.getProfileId(profile);<br>	<span class="hljs-keyword">if</span>(String.IsNullOrEmpty(profileId)) Debug.LogWarning(<span class="hljs-string">$&quot;Couldn&#x27;t find a profile named <span class="hljs-subst">&#123;profile&#125;</span>&quot;</span>);<br>	<span class="hljs-keyword">else</span><br>		settings.activeProfiledId = profileId;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>设置构建脚本：<code>BuildContent</code>会根据<code>ActivePlayerDataBuilder</code>设置启动构建，构建脚本必须是实现了<code>IDataBuilder</code>的<code>ScriptableObject</code>，并且必须将其添加到<code>AddressableAssetSettings</code> 实例中的<code>DataBuilders</code>列表中。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setBuilder</span>(<span class="hljs-params">IDataBuilder builder</span>)</span><br>&#123;<br>	<span class="hljs-built_in">int</span> index= settings.DataBuilders.IndexOf((ScriptableObject)builder);<br>	<span class="hljs-keyword">if</span>(index &gt; <span class="hljs-number">0</span>)<br>		settings.ActivePlayerDataBuilderIndex = index;<br>	<span class="hljs-keyword">else</span><br>		Debug.LogWarining(<span class="hljs-string">$&quot;<span class="hljs-subst">&#123;builder&#125;</span> must be added to the &quot;</span> +<br>                         <span class="hljs-string">$&quot;DataBuilders list before it can be made &quot;</span> +<br>                         <span class="hljs-string">$&quot;active. Using last run builder instead.&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>启动构建</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">buildAddressableContent</span>()</span><br>&#123;<br>	AddressableAssetSettings.BuildPlayerContent(<span class="hljs-keyword">out</span> AddressablesPlayerBuildResult result);<br>	<span class="hljs-built_in">bool</span> success = <span class="hljs-built_in">string</span>.IsNullOrEmpty(result.Error);<br>	<span class="hljs-keyword">if</span>(!success) Debug.LogError(<span class="hljs-string">&quot;Addressables build error&quot;</span> + result.Error);<br>	<span class="hljs-keyword">return</span> success;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在编辑器中的示例脚本，实现了2个命令，分别完成构建<code>Addressable</code>和<code>Player</code>。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-meta">#<span class="hljs-keyword">if</span> UNITY_EDITOR</span><br>    <span class="hljs-keyword">using</span> UnityEditor;<br>    <span class="hljs-keyword">using</span> UnityEditor.AddressableAssets.Build;<br>    <span class="hljs-keyword">using</span> UnityEditor.AddressableAssets.Settings;<br>    <span class="hljs-keyword">using</span> System;<br>    <span class="hljs-keyword">using</span> UnityEngine;<br><br>    <span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BuildLauncher</span><br>    &#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">string</span> build_script<br>            = <span class="hljs-string">&quot;Assets/AddressableAssetsData/DataBuilders/BuildScriptPackedMode.asset&quot;</span>;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">string</span> settings_asset<br>            = <span class="hljs-string">&quot;Assets/AddressableAssetsData/AddressableAssetSettings.asset&quot;</span>;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">string</span> profile_name = <span class="hljs-string">&quot;Default&quot;</span>;<br>        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> AddressableAssetSettings settings;<br><br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">getSettingsObject</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> settingsAsset</span>)</span><br>        &#123;<br>            <span class="hljs-comment">// This step is optional, you can also use the default settings:</span><br>            <span class="hljs-comment">//settings = AddressableAssetSettingsDefaultObject.Settings;</span><br><br>            settings<br>                = AssetDatabase.LoadAssetAtPath&lt;ScriptableObject&gt;(settingsAsset)<br>                    <span class="hljs-keyword">as</span> AddressableAssetSettings;<br><br>            <span class="hljs-keyword">if</span> (settings == <span class="hljs-literal">null</span>)<br>                Debug.LogError(<span class="hljs-string">$&quot;<span class="hljs-subst">&#123;settingsAsset&#125;</span> couldn&#x27;t be found or isn&#x27;t &quot;</span> +<br>                               <span class="hljs-string">$&quot;a settings object.&quot;</span>);<br>        &#125;<br><br><br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setProfile</span>(<span class="hljs-params"><span class="hljs-built_in">string</span> profile</span>)</span><br>        &#123;<br>            <span class="hljs-built_in">string</span> profileId = settings.profileSettings.GetProfileId(profile);<br>            <span class="hljs-keyword">if</span> (String.IsNullOrEmpty(profileId))<br>                Debug.LogWarning(<span class="hljs-string">$&quot;Couldn&#x27;t find a profile named, <span class="hljs-subst">&#123;profile&#125;</span>, &quot;</span> +<br>                                 <span class="hljs-string">$&quot;using current profile instead.&quot;</span>);<br>            <span class="hljs-keyword">else</span><br>                settings.activeProfileId = profileId;<br>        &#125;<br><br><br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setBuilder</span>(<span class="hljs-params">IDataBuilder builder</span>)</span><br>        &#123;<br>            <span class="hljs-built_in">int</span> index = settings.DataBuilders.IndexOf((ScriptableObject)builder);<br><br>            <span class="hljs-keyword">if</span> (index &gt; <span class="hljs-number">0</span>)<br>                settings.ActivePlayerDataBuilderIndex = index;<br>            <span class="hljs-keyword">else</span><br>                Debug.LogWarning(<span class="hljs-string">$&quot;<span class="hljs-subst">&#123;builder&#125;</span> must be added to the &quot;</span> +<br>                                 <span class="hljs-string">$&quot;DataBuilders list before it can be made &quot;</span> +<br>                                 <span class="hljs-string">$&quot;active. Using last run builder instead.&quot;</span>);<br>        &#125;<br>        <br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">buildAddressableContent</span>()</span><br>        &#123;<br>            AddressableAssetSettings<br>                .BuildPlayerContent(<span class="hljs-keyword">out</span> AddressablesPlayerBuildResult result);<br>            <span class="hljs-built_in">bool</span> success = <span class="hljs-built_in">string</span>.IsNullOrEmpty(result.Error);<br><br>            <span class="hljs-keyword">if</span> (!success)<br>            &#123;<br>                Debug.LogError(<span class="hljs-string">&quot;Addressables build error encountered: &quot;</span> + result.Error);<br>            &#125;<br><br>            <span class="hljs-keyword">return</span> success;<br>        &#125;<br>        <br>        [<span class="hljs-meta">MenuItem(<span class="hljs-string">&quot;Window/Asset Management/Addressables/Build Addressables only&quot;</span>)</span>]<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">BuildAddressables</span>()</span><br>        &#123;<br>            getSettingsObject(settings_asset);<br>            setProfile(profile_name);<br>            IDataBuilder builderScript<br>                = AssetDatabase.LoadAssetAtPath&lt;ScriptableObject&gt;(build_script) <span class="hljs-keyword">as</span> IDataBuilder;<br><br>            <span class="hljs-keyword">if</span> (builderScript == <span class="hljs-literal">null</span>)<br>            &#123;<br>                Debug.LogError(build_script + <span class="hljs-string">&quot; couldn&#x27;t be found or isn&#x27;t a build script.&quot;</span>);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>            &#125;<br><br>            setBuilder(builderScript);<br><br>            <span class="hljs-keyword">return</span> buildAddressableContent();<br>        &#125;<br><br>        [<span class="hljs-meta">MenuItem(<span class="hljs-string">&quot;Window/Asset Management/Addressables/Build Addressables and Player&quot;</span>)</span>]<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">BuildAddressablesAndPlayer</span>()</span><br>        &#123;<br>            <span class="hljs-built_in">bool</span> contentBuildSucceeded = BuildAddressables();<br><br>            <span class="hljs-keyword">if</span> (contentBuildSucceeded)<br>            &#123;<br>                <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">new</span> BuildPlayerOptions();<br>                BuildPlayerOptions playerSettings<br>                    = BuildPlayerWindow.DefaultBuildMethods.GetBuildPlayerOptions(options);<br><br>                BuildPipeline.BuildPlayer(playerSettings);<br>            &#125;<br>        &#125;<br>    &#125;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br><br></code></pre></td></tr></table></figure>
+
+<p>如果脚本化构建过程涉及<code>Domain reloads</code>，则不应在编辑器中运行，而是应该使用<code>Unity</code>的命令行参数。<br>在编辑器中以交互方式运行触发域重载的脚本时，例如使用菜单命令，编辑器脚本会在域重载发生之前完成执行。因此，如果立即开始<code>Addressables</code>构建，代码和导入的资源仍然处于原始状态。必须等待域重载完成后再开始内容构建。</p>
+<p>关于自定义构建脚本内容不做补充。</p>
+<h3 id="部分资源如何被构建"><a href="#部分资源如何被构建" class="headerlink" title="部分资源如何被构建"></a>部分资源如何被构建</h3><h4 id="图集Sprite-Atlases"><a href="#图集Sprite-Atlases" class="headerlink" title="图集Sprite Atlases"></a>图集<code>Sprite Atlases</code></h4><p>对于位于不同组的<code>Addressable Texture</code>，会被分别打包。</p>
+<p>将其放入非<code>Addrsssable</code>的<code>Sprite Atlas</code>，其中一个<code>AssetBundle</code>会包含所有<code>Texture</code>，其余<code>AssetBundle</code>只包含<code>Metadata</code>并且将之作为依赖。</p>
+<p>将其放入<code>Addressable</code>的<code>Sprite Atlas</code>，<code>Altas</code>所在<code>AssetBundle</code>会包含所有<code>Texture</code>，其余<code>AssetBundle</code>只包含<code>Metadata</code>。</p>
+<p>在上述前提基础上，当引用<code>Texture</code>的<code>Prefab</code>被设置为<code>Addressable</code>，而<code>Atlas</code>设置为<code>Non-Addressable</code>，<code>Prefab</code>所在<code>AssetBundle</code>会包含<code>Atals</code>的所有<code>Texture</code>，造成严重重复。</p>
+<p>应该将<code>Atlas</code>设置为<code>Addressable</code>，此时，<code>Prefab</code>所在<code>AssetBundle</code>中仅包含引用，依赖自<code>Atlas</code>所在<code>AssetBundle</code>。</p>
+<h4 id="Shaders"><a href="#Shaders" class="headerlink" title="Shaders"></a><code>Shaders</code></h4><p>默认情况下，<code>Unity</code>会移除未在任何场景中使用的着色器变体。这可能会排除仅在<code>AssetBundles</code>中使用的变体。为确保某些变体不会被移除，请在图形设置中的着色器移除属性中包含它们。</p>
+<p>例如，如果您有使用与光照贴图相关的着色器（如<code>Mixed Lights</code>）的 Addressable 资产，请前往<code>Edit &gt; Project Settings &gt; Graphics &gt; Shader Stripping</code>，并将光照贴图模式属性设置为自定义。</p>
+<p>质量设置也会影响<code>AssetBundles</code>中使用的着色器变体。</p>
+<h2 id="6-分发"><a href="#6-分发" class="headerlink" title="6. 分发"></a>6. 分发</h2><h2 id="7-运行时使用Addressables"><a href="#7-运行时使用Addressables" class="headerlink" title="7. 运行时使用Addressables"></a>7. 运行时使用<code>Addressables</code></h2><h2 id="8-加载资源"><a href="#8-加载资源" class="headerlink" title="8. 加载资源"></a>8. 加载资源</h2><h3 id="Addressables加载流程"><a href="#Addressables加载流程" class="headerlink" title="Addressables加载流程"></a><code>Addressables</code>加载流程</h3><ol>
+<li>根据给出的<code>key</code>寻找资源</li>
+<li>创建资源依赖列表</li>
+<li>下载远程<code>AssetBundle</code></li>
+<li>将<code>AssetBundle</code>载入内存</li>
+<li>将加载的<code>object</code>赋给<code>Result</code></li>
+<li>更新<code>Status</code>，执行<code>Completed</code>事件回调</li>
+</ol>
+<p>这里提到的<code>key</code>是<code>Addressables</code>寻找资源的依据，可以是下面几种类型：</p>
+<ul>
+<li><code>Address</code>：资源的实际地址字符串，是资源的唯一标识。</li>
+<li><code>Label</code>：标签字符串，可以指向多个资源。</li>
+<li><code>AssetReference object</code>：<code>AssetReference</code>的实例。</li>
+<li><code>IResourceLocation instance</code>：包含加载资源及其依赖所需信息的中间<code>object</code>。</li>
+</ul>
+<p>加载成功：</p>
+<ul>
+<li><code>Status</code>置为<code>Succeeded</code>。</li>
+<li><code>Result</code>被赋值。</li>
+</ul>
+<p>加载失败：</p>
+<ul>
+<li><code>Status</code>置为<code>Failed</code>。</li>
+<li><code>OperationException</code>获取错误信息，可以使用<code>ResourceManager.ExceptionHandler</code>处理信息，或者通过勾选<code>Log Runtime Exceptions</code>打印信息至<code>Unity Conole</code>。</li>
+</ul>
+<h3 id="异步加载Asynchronous-loading"><a href="#异步加载Asynchronous-loading" class="headerlink" title="异步加载Asynchronous loading"></a>异步加载<code>Asynchronous loading</code></h3><p>异步加载方法不会直接返回资源本身，而是返回一个<code>AsyncOperationHandle</code>，可以使用该对象访问加载的资源。</p>
+<p>除非主动释放这些资源，它们都会一直存在与内存当中，所以使用<code>Addressables.Release</code>释放空间，一些方法会自动释放如<code>UnloadSceneAsync</code>。</p>
+<p>加载失败时，<code>Handle</code>仍然需要被释放，不过加载多个资源的方法如<code>LoadAssetsAsync</code>允许在加载任意资源失败时保留已经加载的资源或者释放所有的资源。</p>
+<p>第一次加载资源最少需要一帧时间才能完成操作。之后再次加载时，不同的异步操作需要不同时间：</p>
+<ul>
+<li><code>Coroutine</code>：不论内容是否加载完成，执行前至少延迟一帧。</li>
+<li><code>Completed</code>事件回调：如果内容尚未加载，至少延迟一帧，否则同帧调用回调函数。</li>
+<li><code>Await AsyncOperationHandle.Task</code>：如果内容尚未加载，至少延迟一帧，否则同帧执行。</li>
+</ul>
+<p>这三种操作也是<code>Addressables</code>推荐使用的异步加载方式。</p>
+<h4 id="Coroutine"><a href="#Coroutine" class="headerlink" title="Coroutine"></a><code>Coroutine</code></h4><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> System.Collections;<br><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadWithIEnumerator</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> address;<br>    AsyncOperationHandle&lt;GameObject&gt; opHandle;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> IEnumerator <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        opHandle = Addressables.LoadAssetAsync&lt;GameObject&gt;(address);<br><br>        <span class="hljs-comment">// yielding when already done still waits until the next frame</span><br>        <span class="hljs-comment">// so don&#x27;t yield if done.</span><br>        <span class="hljs-keyword">if</span> (!opHandle.IsDone)<br>            <span class="hljs-keyword">yield</span> <span class="hljs-keyword">return</span> opHandle;<br><br>        <span class="hljs-keyword">if</span> (opHandle.Status == AsyncOperationStatus.Succeeded)<br>        &#123;<br>            Instantiate(opHandle.Result, transform);<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            Addressables.Release(opHandle);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.Release(opHandle);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果希望取消<code>LoadAssetAsync</code>，很遗憾这样的操作是不被允许的。但是可以在加载途中<code>Release</code>以减少<code>Handle</code>引用计数，在完成加载后就会自动释放资源。</p>
+<h4 id="基于事件的操作Event-based-operation-handling"><a href="#基于事件的操作Event-based-operation-handling" class="headerlink" title="基于事件的操作Event-based operation handling"></a>基于事件的操作<code>Event-based operation handling</code></h4><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadWithEvent</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> address;<br>    AsyncOperationHandle&lt;GameObject&gt; opHandle;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        <span class="hljs-comment">// Create operation</span><br>        opHandle = Addressables.LoadAssetAsync&lt;GameObject&gt;(address);<br>        <span class="hljs-comment">// Add event handler</span><br>        opHandle.Completed += Operation_Completed;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Operation_Completed</span>(<span class="hljs-params">AsyncOperationHandle&lt;GameObject&gt; obj</span>)</span><br>    &#123;<br>        <span class="hljs-keyword">if</span> (obj.Status == AsyncOperationStatus.Succeeded)<br>        &#123;<br>            Instantiate(obj.Result, transform);<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            Addressables.Release(obj);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.Release(opHandle);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="基于Task的操作Task-based-operation-handling"><a href="#基于Task的操作Task-based-operation-handling" class="headerlink" title="基于Task的操作Task-based operation handling"></a>基于<code>Task</code>的操作<code>Task-based operation handling</code></h4><p><code>AsyncOperationHandle</code>提供了<code>Task</code>对象，因此可以通过<code>C#</code>的<code>await</code>和<code>async</code>关键字调用异步方法。</p>
+<p>注意：<code>WebGL</code>平台无法使用<code>AsyncOperationHandle.Task</code>。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> System.Collections.Generic;<br><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadWithTask</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-comment">// Label or address strings to load</span><br>    <span class="hljs-keyword">public</span> List&lt;<span class="hljs-built_in">string</span>&gt; keys = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">string</span>&gt;() &#123;<span class="hljs-string">&quot;characters&quot;</span>, <span class="hljs-string">&quot;animals&quot;</span>&#125;;<br><br>    <span class="hljs-comment">// Operation handle used to load and release assets</span><br>    AsyncOperationHandle&lt;IList&lt;GameObject&gt;&gt; loadHandle;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        loadHandle = Addressables.LoadAssetsAsync&lt;GameObject&gt;(<br>            keys, <span class="hljs-comment">// Either a single key or a List of keys </span><br>            addressable =&gt;<br>            &#123;<br>                <span class="hljs-comment">// Called for every loaded asset</span><br>                Debug.Log(addressable.name);<br>            &#125;, Addressables.MergeMode.Union, <span class="hljs-comment">// How to combine multiple labels </span><br>            <span class="hljs-literal">false</span>); <span class="hljs-comment">// Whether to fail if any asset fails to load</span><br><br>        <span class="hljs-comment">// Wait for the operation to finish in the background</span><br>        <span class="hljs-keyword">await</span> loadHandle.Task;<br><br>        <span class="hljs-comment">// Instantiate the results</span><br>        <span class="hljs-built_in">float</span> x = <span class="hljs-number">0</span>, z = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> addressable <span class="hljs-keyword">in</span> loadHandle.Result)<br>        &#123;<br>            <span class="hljs-keyword">if</span> (addressable != <span class="hljs-literal">null</span>)<br>            &#123;<br>                Instantiate&lt;GameObject&gt;(addressable,<br>                    <span class="hljs-keyword">new</span> Vector3(x++ * <span class="hljs-number">2.0f</span>, <span class="hljs-number">0</span>, z * <span class="hljs-number">2.0f</span>),<br>                    Quaternion.identity,<br>                    transform); <span class="hljs-comment">// make child of this object</span><br><br>                <span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">9</span>)<br>                &#123;<br>                    x = <span class="hljs-number">0</span>;<br>                    z++;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.Release(loadHandle);<br>        <span class="hljs-comment">// Release all the loaded assets associated with loadHandle</span><br>        <span class="hljs-comment">// Note that if you do not make loaded addressables a child of this object,</span><br>        <span class="hljs-comment">// then you will need to devise another way of releasing the handle when</span><br>        <span class="hljs-comment">// all the individual addressables are destroyed.</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>AsyncOperationHandle.Task</code>可以使用<code>C#</code>的<code>Task</code>类中的方法如<code>WhenAll</code>控制流程。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-comment">// Load the Prefabs</span><br><span class="hljs-keyword">var</span> prefabOpHandle = Addressables.LoadAssetsAsync&lt;GameObject&gt;(<br>    keys, <span class="hljs-literal">null</span>, Addressables.MergeMode.Union, <span class="hljs-literal">false</span>);<br><br><span class="hljs-comment">// Load a Scene additively</span><br><span class="hljs-keyword">var</span> sceneOpHandle<br>    = Addressables.LoadSceneAsync(nextScene,<br>        UnityEngine.SceneManagement.LoadSceneMode.Additive);<br><br><span class="hljs-keyword">await</span> System.Threading.Tasks.Task.WhenAll(prefabOpHandle.Task, sceneOpHandle.Task);<br></code></pre></td></tr></table></figure>
+
+<h3 id="同步加载Synchronous-loading"><a href="#同步加载Synchronous-loading" class="headerlink" title="同步加载Synchronous loading"></a>同步加载<code>Synchronous loading</code></h3><h4 id="WaitForCompletion"><a href="#WaitForCompletion" class="headerlink" title="WaitForCompletion"></a><code>WaitForCompletion</code></h4><p>要在<code>Addressables</code>中使用同步加载，需要调用<code>WaitForCompletion</code>方法，这样会阻塞主线程直到操作完成。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadSynchronously</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> address;<br>    AsyncOperationHandle&lt;GameObject&gt; opHandle;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        opHandle = Addressables.LoadAssetAsync&lt;GameObject&gt;(address);<br>        opHandle.WaitForCompletion(); <span class="hljs-comment">// Returns when operation is complete</span><br><br>        <span class="hljs-keyword">if</span> (opHandle.Status == AsyncOperationStatus.Succeeded)<br>        &#123;<br>            Instantiate(opHandle.Result, transform);<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            Addressables.Release(opHandle);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.Release(opHandle);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>WaitForCompletion</code>会返回异步加载的<code>Result</code>，如果加载失败则会返回<code>default(TObject)</code>。对于<code>autoReleaseHandle</code>设置为<code>true</code>和<code>Addressables.InitializeAsync</code>这种会自动释放句柄的操作，<code>WaitForComletion</code>同样会返回<code>default(TObject)</code>。</p>
+<p>注意：<code>WaitForCompletion</code>可能造成一些性能问题，尤其是资源未缓存在本地的时候，不要在需要下载远程资源时使用。</p>
+<p>另外，<code>WebGL</code>不支持<code>WaitForCompletion</code>。</p>
+<h4 id="场景同步加载限制"><a href="#场景同步加载限制" class="headerlink" title="场景同步加载限制"></a>场景同步加载限制</h4><p>在<code>Unity</code>中，场景无法同步加载，也无法同步卸载。</p>
+<p>简单来说，加载场景需要经历2个阶段，首先序列化数据，然后注册到<code>SceneManager</code>、<code>Physics</code>、<code>Rendering</code>等引擎系统，<code>WaitForCompletion</code>只完成一阶段内容，而没有激活场景。</p>
+<p>另外，由于<code>WaitForCompletion</code>会阻碍主线程，因此如果连续加载<code>Single</code>场景（场景覆盖时会销毁上一个场景，调用<code>UnloadUnusedAsstes</code>）并且使用该方法会导致死锁问题。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">var</span> handle1 = Addressables.LoadSceneAsync(<span class="hljs-string">&quot;Scene1&quot;</span>, LoadSceneMode.Single);<br><span class="hljs-keyword">var</span> scene1 = handle1.WaitForCompletion(); <span class="hljs-comment">// 主线程被阻塞</span><br><br><span class="hljs-keyword">var</span> handle2 = Addressables.LoadSceneAsync(<span class="hljs-string">&quot;Scene2&quot;</span>, LoadSceneMode.Single);<br><span class="hljs-keyword">var</span> scene2 = handle2.WaitForCompletion(); <span class="hljs-comment">// 再次阻塞主线程</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="自定义操作Custom-Operations"><a href="#自定义操作Custom-Operations" class="headerlink" title="自定义操作Custom Operations"></a>自定义操作<code>Custom Operations</code></h3><p>如果要自定义操作，需要继承自<code>AsyncOperationBase</code>类并且重写其虚方法。</p>
+<h4 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h4><p>如果要使用自定义操作，还需要将它注册给<code>ResourceManager.StartOperation</code>方法。</p>
+<h4 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h4><p><code>ResourceManager</code>会调用<code>AsyncOperationBase.Excute</code>方法。</p>
+<h4 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h4><p>当自定义操作完成时，应该调用<code>AsyncOperationBase.Complete</code>，这个方法告诉<code>ResourceManager</code>操作已经结束，应该触发自定义操作实例的<code>AsyncOperationHandle.Completed</code>事件。</p>
+<h4 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h4><p>当<code>AsyncOperationBase.ReferenceCount</code>归零时，<code>ResourceManager</code>会调用<code>AsyncOperationBase.Destroy</code>。<code>Addressables.Release</code>和<code>AsyncOperationBase.DecrementReferenceCount</code>都会减少引用数。</p>
+<h4 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h4><p>大多数<code>Addressables</code>方法返回通用<code>AsyncOperationHandle&lt;T&gt;</code>类型。也可以使用非通用类型<code>AsyncOperationHandle</code>，并在两种类型间转换。但是将<code>AsyncOperationHandle</code>转换为<code>Handle</code>信息未记录的类型是不被允许的。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-comment">// Load asset using typed handle:</span><br>AsyncOperationHandle&lt;Texture2D&gt; textureHandle = Addressables.LoadAssetAsync&lt;Texture2D&gt;(<span class="hljs-string">&quot;mytexture&quot;</span>);<br><br><span class="hljs-comment">// Convert the AsyncOperationHandle&lt;Texture2D&gt; to an AsyncOperationHandle:</span><br>AsyncOperationHandle nonGenericHandle = textureHandle;<br><br><span class="hljs-comment">// Convert the AsyncOperationHandle to an AsyncOperationHandle&lt;Texture2D&gt;:</span><br>AsyncOperationHandle&lt;Texture2D&gt; textureHandle2 = nonGenericHandle.Convert&lt;Texture2D&gt;();<br><br><span class="hljs-comment">// This will throw and exception because Texture2D is required</span><br>AsyncOperationHandle&lt;Texture&gt; textureHandle3 = nonGenericHandle.Convert&lt;Texture&gt;();<br><span class="hljs-comment">// 因为 nonGenericHandle 已经记录了类型为 Texture2D</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="报告加载进度"><a href="#报告加载进度" class="headerlink" title="报告加载进度"></a>报告加载进度</h3><p><code>Addressables</code>提供了一些方法可以监控报告操作的进度：</p>
+<ul>
+<li><code>GetDownloadStatus</code>：返回<code>DownloadStatus</code>结构体，包含已下载的<code>bytes</code>和未下载的<code>bytes</code>，<code>DownloadStatus.PercentComplete</code>提供了下载百分比。当资源在本地缓存，则<code>Percent</code>直接返回<code>100%</code>。</li>
+<li><code>AsyncOperationHandle.PercentComplete</code>：返回任务完成百分比，每个子任务权重相同。</li>
+</ul>
+<h3 id="加载资产-Load-Assets"><a href="#加载资产-Load-Assets" class="headerlink" title="加载资产 Load Assets"></a>加载资产 <code>Load Assets</code></h3><h4 id="加载单个资产"><a href="#加载单个资产" class="headerlink" title="加载单个资产"></a>加载单个资产</h4><p>使用<code>LoadAssetAsync</code>加载单个资产，可以使用<code>key</code>值筛选，如果有多个目标符合，则只会返回第一个资产。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> System.Collections;<br><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadAddress</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> key;<br>    AsyncOperationHandle&lt;GameObject&gt; opHandle;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> IEnumerator <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        opHandle = Addressables.LoadAssetAsync&lt;GameObject&gt;(key);<br>        <span class="hljs-keyword">yield</span> <span class="hljs-keyword">return</span> opHandle;<br><br>        <span class="hljs-keyword">if</span> (opHandle.Status == AsyncOperationStatus.Succeeded)<br>        &#123;<br>            GameObject obj = opHandle.Result;<br>            Instantiate(obj, transform);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.Release(opHandle);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="加载多个资产"><a href="#加载多个资产" class="headerlink" title="加载多个资产"></a>加载多个资产</h4><p>使用<code>LoadAssetsAsync</code>方法加载多个资产，可以使用<code>key</code>列表匹配资产，有几种匹配方式：</p>
+<ul>
+<li><code>Union</code>：符合任意<code>key</code>。</li>
+<li><code>Intersection</code>：符合所有<code>key</code>。</li>
+<li><code>UseFirst</code>：返回符合第一个<code>key</code>的第一个资产。</li>
+</ul>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> System.Collections;<br><span class="hljs-keyword">using</span> System.Collections.Generic;<br><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadMultiple</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-comment">// Label strings to load</span><br>    <span class="hljs-keyword">public</span> List&lt;<span class="hljs-built_in">string</span>&gt; keys = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">string</span>&gt;() &#123;<span class="hljs-string">&quot;characters&quot;</span>, <span class="hljs-string">&quot;animals&quot;</span>&#125;;<br><br>    <span class="hljs-comment">// Operation handle used to load and release assets</span><br>    AsyncOperationHandle&lt;IList&lt;GameObject&gt;&gt; loadHandle;<br><br>    <span class="hljs-comment">// Load Addressables by Label</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> IEnumerator <span class="hljs-title">Start</span>()</span><br>    &#123;<br>        <span class="hljs-built_in">float</span> x = <span class="hljs-number">0</span>, z = <span class="hljs-number">0</span>;<br>        loadHandle = Addressables.LoadAssetsAsync&lt;GameObject&gt;(<br>            keys,<br>            addressable =&gt;<br>            &#123;<br>                <span class="hljs-comment">//Gets called for every loaded asset</span><br>                Instantiate&lt;GameObject&gt;(addressable,<br>                    <span class="hljs-keyword">new</span> Vector3(x++ * <span class="hljs-number">2.0f</span>, <span class="hljs-number">0</span>, z * <span class="hljs-number">2.0f</span>),<br>                    Quaternion.identity,<br>                    transform);<br><br>                <span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">9</span>)<br>                &#123;<br>                    x = <span class="hljs-number">0</span>;<br>                    z++;<br>                &#125;<br>            &#125;, Addressables.MergeMode.Union, <span class="hljs-comment">// How to combine multiple labels </span><br>            <span class="hljs-literal">false</span>); <span class="hljs-comment">// Whether to fail and release if any asset fails to load</span><br><br>        <span class="hljs-keyword">yield</span> <span class="hljs-keyword">return</span> loadHandle;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.Release(loadHandle);<br>        <span class="hljs-comment">// Release all the loaded assets associated with loadHandle</span><br>        <span class="hljs-comment">// Note that if you do not make loaded addressables a child of this object,</span><br>        <span class="hljs-comment">// then you will need to devise another way of releasing the handle when</span><br>        <span class="hljs-comment">// all the individual addressables are destroyed.</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="加载多个资产失败"><a href="#加载多个资产失败" class="headerlink" title="加载多个资产失败"></a>加载多个资产失败</h4><p>当加载失败时，根据<code>releaseDependenciesOnFailure</code>，如果设置为<code>true</code>则会释放已加载资源，设置为<code>false(default)</code>则会尝试加载所有资产，加载失败的资产以<code>null</code>代替。</p>
+<h4 id="根据Location加载资产"><a href="#根据Location加载资产" class="headerlink" title="根据Location加载资产"></a>根据<code>Location</code>加载资产</h4><p>使用<code>key</code>值查找资产时，<code>Addressables</code>首先查询资产<code>location</code>，并使用<code>IResourceLocation</code>实例下载需要的<code>AssetBundle</code>以及依赖项，加载时可以使用<code>LoadResourceLocationsAsync</code>。</p>
+<p><code>LoadResourceLocationsAsync</code>如果没有找到资产就会返回空列表。</p>
+<p>此外，<code>LoadResourceLocationsAsync</code>的参数<code>type</code>可以指定查找的资产类型。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C#">AsyncOperationHandle&lt;IList&lt;IResourceLocation&gt;&gt; handle<br>    = Addressables.LoadResourceLocationsAsync(<br>        <span class="hljs-keyword">new</span> <span class="hljs-built_in">string</span>[] &#123;<span class="hljs-string">&quot;knight&quot;</span>, <span class="hljs-string">&quot;villager&quot;</span>&#125;,<br>        <span class="hljs-keyword">typeof</span>(Texture2D),<br>        Addressables.MergeMode.Union);<br><br><span class="hljs-keyword">yield</span> <span class="hljs-keyword">return</span> handle;<br><br><span class="hljs-comment">//...</span><br><br>Addressables.Release(handle);<br></code></pre></td></tr></table></figure>
+
+<p>对于具有子对象的资产，每个子对象都会生成<code>IResourceLocation</code>实例，可以使用<code>type</code>选择性获取<code>location</code>。有以下几种写法：</p>
+<ul>
+<li><code>LoadResourceLocationsAsync(&quot;myFBXObject&quot;, typeof(Mesh))</code></li>
+<li><code>LoadResourceLocationsAsync(&quot;myFBXObject[Mesh]&quot;)</code></li>
+</ul>
+<h3 id="加载场景-Load-Scene"><a href="#加载场景-Load-Scene" class="headerlink" title="加载场景 Load Scene"></a>加载场景 <code>Load Scene</code></h3><p><code>Addressables.LoadSceneAsync</code>方法可以加载场景，这个方法是对<code>SceneManager.LoadSceneAsync</code>的封装。</p>
+<p><code>Addressables.LoadSceneAsync</code>方法有几个参数：</p>
+<ul>
+<li><code>LoadSceneMode</code>：控制加载场景是额外加载<code>Additive</code>还是覆盖加载<code>Single</code>。</li>
+<li><code>LocalPhysicsMode</code>：控制额外加载场景的物理是否与当前场景物理产生交互还是单独隔离作用（该参数被包含在<code>LoadSceneParameters</code>中）。</li>
+<li><code>LoadSceneParameters</code>：包含上面两个参数。</li>
+<li><code>activateOnLoad</code>：控制场景激活流程，如果设置为<code>false</code>需要调用<code>SceneInstance.ActivateAsync()</code>方法激活。</li>
+<li><code>priority</code>：<code>Unity</code>的加载线程&#x2F;主线程调度器会把所有异步操作按 <code>priority</code>降序排队，数字大的先执行，默认为<code>100</code>。</li>
+</ul>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">using</span> UnityEngine;<br><span class="hljs-keyword">using</span> UnityEngine.AddressableAssets;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.AsyncOperations;<br><span class="hljs-keyword">using</span> UnityEngine.ResourceManagement.ResourceProviders;<br><span class="hljs-keyword">using</span> UnityEngine.SceneManagement;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">LoadSceneByAddress</span> : <span class="hljs-title">MonoBehaviour</span><br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">string</span> key; <span class="hljs-comment">// address string</span><br>    <span class="hljs-keyword">private</span> AsyncOperationHandle&lt;SceneInstance&gt; loadHandle;<br><br>    <span class="hljs-function">IEnumerator <span class="hljs-title">Start</span>()</span><br>    &#123;<br>	    LoadSceneParameters param = <span class="hljs-keyword">new</span> LoadSceneParameters(<br>		    LoadSceneMode.Additive <br>		    , LocalPhysicsMode.None);<br>	    <br>        loadHandle = Addressables.LoadSceneAsync(<br>	        key, <br>	        param,<br>		    activateOnLoad:<span class="hljs-literal">false</span>,<br>		    priority:<span class="hljs-number">100</span>);<br>		<span class="hljs-keyword">yield</span> <span class="hljs-keyword">return</span> loadHandle;<br>		<br>		SceneInstance sceneInstance = loadHandle.Result;<br>		<span class="hljs-keyword">yield</span> <span class="hljs-keyword">return</span> sceneInstance.ActivateAsync();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">OnDestroy</span>()</span><br>    &#123;<br>        Addressables.UnloadSceneAsync(loadHandle);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="加载-AB-包-Load-AssetBundles"><a href="#加载-AB-包-Load-AssetBundles" class="headerlink" title="加载 AB 包 &#96;Load AssetBundles"></a>加载 AB 包 &#96;Load AssetBundles</h3><p><code>Addressables</code>通过两种方式加载 <strong>AB</strong> 包，默认采用<code>AssetBundle.LoadFromFileAsync</code>加载本地资产，采用<code>UnityWebRequest.GetAssetBundle</code>加载远程资产。</p>
+<p><code>AssetBundle.LoadFromFileAsync</code>对不同压缩方式处理：</p>
+<table>
+<thead>
+<tr>
+<th align="center">压缩方式</th>
+<th align="center">实际行为</th>
+<th align="center">成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">LZ4</td>
+<td align="center">读取文件头，按需解压块</td>
+<td align="center">最低</td>
+</tr>
+<tr>
+<td align="center">LZMA</td>
+<td align="center">整包解压进内存再返回</td>
+<td align="center">首次加载慢</td>
+</tr>
+<tr>
+<td align="center">未压缩</td>
+<td align="center">直接把磁盘文件直接映射到内存地址空间</td>
+<td align="center">最快</td>
+</tr>
+</tbody></table>
+<p><code>UnityWebRequest.GetAssetBundle</code>对不同压缩方式处理：</p>
+<table>
+<thead>
+<tr>
+<th align="center">压缩方式</th>
+<th align="center">实际行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">LZ4</td>
+<td align="center">原样缓存</td>
+</tr>
+<tr>
+<td align="center">LZMA</td>
+<td align="center">先下载解压，再本地压缩为 LZ4</td>
+</tr>
+</tbody></table>
+<h3 id="卸载资产-Unload-Addressable-assets"><a href="#卸载资产-Unload-Addressable-assets" class="headerlink" title="卸载资产 Unload Addressable assets"></a>卸载资产 <code>Unload Addressable assets</code></h3><p><code>Addressables</code>会自动释放引用计数为 0 的资产。</p>
+<p>卸载一个场景会导致其所在整个 AB 包都被卸载，也会将其中所有的<code>GameObject</code>卸载，即使将之移动到其他场景。</p>
+<p>使用<code>LoadSceneMode.Single</code>会调用<code>UnloadUnusedAssets</code>方法，如果想要防止场景被卸载，需要保持对其的引用，可以对其句柄使用<code>ResourceManager.Acquire</code>。</p>
+<p>对于<code>Addressables</code>的卸载方法，<code>Object.DontDestroyOnLoad</code>或者<code>HideFlags.DontUnloadUnusedAsset</code>等保存资产的方法都不起作用。</p>
+<p><code>Addressables</code>单独加载的资产无关场景，不会被释放，除非以<code>Single</code>模式加载新场景调用<code>Resource.UnloadUnusedAssts</code>或者<code>UnloadAsset</code>主动释放。</p>
+<h2 id="9-诊断工具"><a href="#9-诊断工具" class="headerlink" title="9. 诊断工具"></a>9. 诊断工具</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19T4y127co?spm_id_from=333.788.player.switch&vd_source=0c4720590a80024b8323b2bb6910d392&p=3">Unity Addressables——bilibili</a><br><a target="_blank" rel="noopener" href="https://docs.unity.cn/Packages/com.unity.addressables@1.21/manual/ProfileVariables.html">Unity Addressables 1.21.14 Manaual</a><br><a href="(https://docs.unity.cn/cn/2022.3/Manual/AssetBundles-Dependencies.html)">Unity 2022.3 Document</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+        <a href="/tags/Addressables/" class="print-no-link">#Addressables</a>
+      
+        <a href="/tags/%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="print-no-link">#动态资源管理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Unity的Addressables</div>
+      <div>http://example.com/2025/11/10/Addressables/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Beitragsautor</div>
+          <div>MKY42</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Veröffentlicht am</div>
+          <div>November 10, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Urheberrechtshinweis</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/11/25/Job%20System/" title="Job System">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Job System</span>
+                        <span class="visible-mobile">Vorheriger</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Inhaltsverzeichnis</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Suchen</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Stichwort</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog funktioniert am besten mit aktiviertem JavaScript</div>
+  </noscript>
+</body>
+</html>

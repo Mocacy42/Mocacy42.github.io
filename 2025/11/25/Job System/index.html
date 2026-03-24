@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<html lang="zh" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/author.png">
+  <link rel="icon" href="/img/author.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="MKY42">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Job SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。 核心思想其核心思想就是将每个任务做成一个 Struct ，让其实现 IJob,IJobParallelFor等接口，其中仅包含数据和对数据的处理逻辑而无引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Job System">
+<meta property="og:url" content="http://example.com/2025/11/25/Job%20System/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Job SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。 核心思想其核心思想就是将每个任务做成一个 Struct ，让其实现 IJob,IJobParallelFor等接口，其中仅包含数据和对数据的处理逻辑而无引">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-11-25T07:27:00.000Z">
+<meta property="article:modified_time" content="2026-03-24T05:24:12.927Z">
+<meta property="article:author" content="MKY42">
+<meta property="article:tag" content="JobSystem">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Job System - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Startseite</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archiv</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Kategorien</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Schlagwörter</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>Über</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>Startseite</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>Archiv</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>Kategorien</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>Schlagwörter</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>Über</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>Suchen</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="Hell"
+               data-label-dark="Dunkel">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">Dunkel</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Job System"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-25 15:27" pubdate>
+          November 25, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k wörter
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 minuten
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Job System</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Job-System"><a href="#Job-System" class="headerlink" title="Job System"></a>Job System</h1><h2 id="Job-System-介绍"><a href="#Job-System-介绍" class="headerlink" title="Job System 介绍"></a>Job System 介绍</h2><p>Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。</p>
+<h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>其核心思想就是将每个任务做成一个 Struct ，让其实现 <code>IJob</code>,<code>IJobParallelFor</code>等接口，其中仅包含数据和对数据的处理逻辑而无引用类型。<br>在主线程中调用 <code>Schedule()</code>将 Job 推入队列，将 Job 分发给子线程，并使用<code>Complete()</code>等待 Job完成。</p>
+<h3 id="安全性系统"><a href="#安全性系统" class="headerlink" title="安全性系统"></a>安全性系统</h3><p>为了避免子线程对主线程内容操作从而造成竞争，Job System 会采用数据拷贝的方式提供子线程数据，即：Job 中操作的数据都是主线程中数据的拷贝而非引用。</p>
+<p>这样的方式也导致 Job 只能访问可位块传输的数据类型( Blittable data type )。<br>基本类型：</p>
+<ul>
+<li><code>byte \ sbyte</code></li>
+<li><code>short \ ushort</code></li>
+<li><code>int \ uint</code></li>
+<li><code>long \ ulong</code></li>
+<li><code>float (System.Single)</code></li>
+<li><code>double (System.Double)</code></li>
+<li><code>IntPtr \ UIntPtr </code></li>
+</ul>
+<p>复杂类型：</p>
+<ul>
+<li>一维数组</li>
+<li>结构体 \ 类（只包含 Blittable 类型 并使用 <code>[StructLayout(LayoutKind.Sequential)]</code>或<code>Explicit</code>显式标识）</li>
+</ul>
+<p>非 Blittable 类型：</p>
+<ul>
+<li><code>string</code></li>
+<li><code>char</code></li>
+<li><code>bool</code></li>
+<li><code>object</code></li>
+<li>…</li>
+</ul>
+<p>拷贝数据的缺陷是 Job 计算与外界隔离，为了获取结果，可以分配一块共享内存 —— NativeContainer。</p>
+<h3 id="NativeContainer"><a href="#NativeContainer" class="headerlink" title="NativeContainer"></a>NativeContainer</h3><p>默认提供的 NativeContainer 是<code>NativeArray&lt;T&gt;</code>。其安全性有两项保障</p>
+<ul>
+<li><code>DisposeSentinel</code>：检测内存泄漏，保证释放内存。</li>
+<li><code>AtomicSafetyHandle</code>：进行 NativeContainer 所有权转让，避免两个 Job 同时写入同一块内存。</li>
+</ul>
+<p>除此之外，编辑器环境下会检查下标边界检查、内存释放检查、资源竞争检查。</p>
+<p>一般，NativeContainer 开放读写权限，如果希望只读或只写，应该约束：</p>
+<ul>
+<li><code>[ReadOnly]</code></li>
+<li><code>[WriteOnly]</code></li>
+</ul>
+<p>访问静态数据可以绕过所有的安全性系统并可能导致Unity奔溃。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C#">NativeArray&lt;<span class="hljs-built_in">float</span>&gt; result = <span class="hljs-keyword">new</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt;(arraySize, Allocator.TempJob);<br></code></pre></td></tr></table></figure>
+<p>为 NativeArray 分配内存时有三种分配器可选：</p>
+<ul>
+<li><code>Allocator.Temp</code>是最快的分配类型。它适用于分配一个生命周期只有一帧或更短时间的操作。你不应当把一个分配器为Temp类型分配的NativeContainer传递给jobs使用。你同时需要在函数返回之前调用Dispose方法(例如MonoBehaviour.Update，或者其他从原生到托管代码的调用)</li>
+<li><code>Allocator.TempJob</code>是相比于 Temp 是一个较慢的分配类型但它比 Persistent 要快。这是一个生命周期为四帧的内存分配而且它是线程安全的。如果你在四帧之内没有调用 Dispose，控制台会打印一个由原生代码生成的警告信息。绝大部分小 jobs 使用这种类型的 NativeContainer 分配器。</li>
+<li><code>Allocator.Persistent</code>是最慢的分配类型但，它可以持续存在到你需要的时间，如果必要的话可以贯穿应用程序的整个生命周期。它是直接调用malloc 的一个封装。长时间的 jos 可以使用这种分配类型。当性能比较紧张的时候你不应当使用 Persistent。</li>
+</ul>
+<h2 id="创建-Job"><a href="#创建-Job" class="headerlink" title="创建 Job"></a>创建 Job</h2><h3 id="Simple-Job-Example"><a href="#Simple-Job-Example" class="headerlink" title="Simple Job Example"></a>Simple Job Example</h3><p>要创建一个 Job，只需要创建一个实现了<code>IJob</code>的结构体并添加 Blittable 类型数据，创建 <code>Execute</code>方法即可。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">struct</span> AddJob : IJob<br>&#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-built_in">float</span> a;<br>	<span class="hljs-keyword">public</span> <span class="hljs-built_in">float</span> bl<br>	<span class="hljs-keyword">public</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt; result;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Execute</span>()</span><br>	&#123;<br>		result[<span class="hljs-number">0</span>] = a + b;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>要在主线程中调用，需要使用<code>Schedule</code>方法。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs C#">NativeArray&lt;<span class="hljs-built_in">float</span>&gt; result = <span class="hljs-keyword">new</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt;(<span class="hljs-number">1</span> , Allocator.TempJob);<br><br>AddJob jobData = <span class="hljs-keyword">new</span> AddJob();<br>jobData.a = <span class="hljs-number">10</span>;<br>jobData.b = <span class="hljs-number">20</span>;<br>jobData.result = result;<br><br>JobHandle handle = jobData.Schedule();<br><br>handle.Complete();<br><br><span class="hljs-built_in">float</span> finalResult = result[<span class="hljs-number">0</span>];<br><br>result.Dispose();<br></code></pre></td></tr></table></figure>
+
+<h3 id="Dependencies-Job-Example"><a href="#Dependencies-Job-Example" class="headerlink" title="Dependencies Job Example"></a>Dependencies Job Example</h3><p>如果一个 Job B 需要另外一个 Job A 的计算结果，就称 Job B 依赖 Job A。<br>可以使用<code>JobHandle.CombineDependencies</code>方法合并依赖项，并且将之传递给<code>Schedule</code>方法。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C#">NativeArray&lt;JobHandle&gt; handles = <span class="hljs-keyword">new</span> NativeArray&lt;JobHandle&gt;(numJobs, Allocator.TempJob);<br><br>JobHandle combineHandle = JobHandle.CombineDependencies(handles);<br><br>newHandle.Schedule(combineHandle);<br></code></pre></td></tr></table></figure>
+
+<h3 id="阻塞主线程"><a href="#阻塞主线程" class="headerlink" title="阻塞主线程"></a>阻塞主线程</h3><p>使用<code>Complete</code>方法可以阻塞主线程直到 Job 完成，并将 NativeContainer 类型的归属权交给主线程。</p>
+<p>可以调用 Job A 的<code>Complete</code>方法，或者你可以调用依赖于 Job A 的 Job B的<code>Complete</code>方法。两种方法都可以在调用<code>Complete</code>后在主线程安全访问 Job A 使用的 NativeContainer 类型。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-comment">// Job </span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">struct</span> MyJob : IJob<br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">float</span> a;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">float</span> b;<br>    <span class="hljs-keyword">public</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt; result;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Execute</span>()</span><br>    &#123;<br>        result[<span class="hljs-number">0</span>] = a + b;<br>    &#125;<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">struct</span> AddOneJob : IJob<br>&#123;<br>    <span class="hljs-keyword">public</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt; result;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Execute</span>()</span><br>    &#123;<br>        result[<span class="hljs-number">0</span>] = result[<span class="hljs-number">0</span>] + <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br><span class="hljs-comment">// Main Thread</span><br>NativeArray&lt;<span class="hljs-built_in">float</span>&gt; result = <span class="hljs-keyword">new</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt;(<span class="hljs-number">1</span>, Allocator.TempJob);<br><br>MyJob jobData = <span class="hljs-keyword">new</span> MyJob();<br>jobData.a = <span class="hljs-number">10</span>;<br>jobData.b = <span class="hljs-number">10</span>;<br>jobData.result = result;<br>JobHandle firstHandle = jobData.Schedule();<br><br>AddOneJob incJobData = <span class="hljs-keyword">new</span> AddOneJob();<br>incJobData.result = result;<br>JobHandle secondHandle = incJobData.Schedule(firstHandle);<br><br>secondHandle.Complete();<br><br><span class="hljs-built_in">float</span> aPlusB = result[<span class="hljs-number">0</span>];<br><br>result.Dispose();<br></code></pre></td></tr></table></figure>
+
+<p>如果不需要对数据的访问，但需要明确地刷新这个批次的 Job。为了做到这点，调用静态方法<code>JobHandle.ScheduleBatchedJobs</code>。注意这个调用会对性能产生负面的影响。</p>
+<p>这个方法常常用于分帧任务中。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span>()</span><br>&#123;<br>    <span class="hljs-keyword">if</span> (!handle.IsCompleted)<br>    &#123;<br>        <span class="hljs-comment">// 帧末先推一次</span><br>        JobHandle.ScheduleBatchedJobs();<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    handle.Complete();  <span class="hljs-comment">// 下一帧再来检查</span><br>    UseResults();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="ParallelFor-Job"><a href="#ParallelFor-Job" class="headerlink" title="ParallelFor Job"></a>ParallelFor Job</h2><p>Unity 中常常需要对大量数量做相同操作，<code>IJobParallelFor</code>专为此情况设计。使用 ParallelFor Job 调度时，只能有一个 Job。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-comment">// ParallelFor Job</span><br><span class="hljs-keyword">struct</span> IncrementByDeltaTimeJob : IJobParallelFor<br>&#123;<br>    <span class="hljs-keyword">public</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt; values;<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">float</span> deltaTime;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Execute</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> index</span>)</span><br>    &#123;<br>        <span class="hljs-built_in">float</span> temp = values[index];<br>        temp += deltaTime;<br>        values[index] = temp;<br>    &#125;<br>&#125;<br><span class="hljs-comment">// Main Thread</span><br>NativeArray&lt;<span class="hljs-built_in">float</span>&gt; values = <span class="hljs-keyword">new</span> NativeArray&lt;<span class="hljs-built_in">float</span>&gt;(<span class="hljs-number">100</span>, Allocator.TempJob);<br><br>IncrementByDeltaTimeJob jobData = <span class="hljs-keyword">new</span> IncrementByDeltaTimeJob<br>&#123;<br>    values = values,<br>    deltaTime = Time.deltaTime<br>&#125;;<br><br>JobHandle handle = jobData.Schedule(values.Length, <span class="hljs-number">1</span>); <br>handle.Complete(); <br></code></pre></td></tr></table></figure>
+
+<p><code>Schedule(int length ,int innerLoopBatchCount)</code>的参数控制如何并行处理。</p>
+<ul>
+<li><code>length</code>：表示源数组大小，方便<code>index</code>遍历。</li>
+<li><code>innerLoopBatchCount</code>：控制线程最大处理的批次上限，就是单个工作线程处理最大任务数。</li>
+</ul>
+<p>Parallel Job 有为 Transforms 专门提供的类型 —— <code>ParallelForTransform</code>。</p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><table>
+<thead>
+<tr>
+<th>接口</th>
+<th>执行模式</th>
+<th>核心方法</th>
+<th>用途</th>
+<th>关键点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IJob</td>
+<td>单任务</td>
+<td>Execute()</td>
+<td>单一独立任务，整体操作数据</td>
+<td>最简单，一次执行</td>
+</tr>
+<tr>
+<td>IJobParallelFor</td>
+<td>数据并行</td>
+<td>Execute(int index)</td>
+<td>处理大型数组&#x2F;列表，无数据竞争</td>
+<td>最常用，高性能，需注意线程安全</td>
+</tr>
+<tr>
+<td>IJobParallelForTransform</td>
+<td>数据并行</td>
+<td>Execute(int index, TransformAccess)</td>
+<td>高效并行处理大量Transforms</td>
+<td>IJobParallelFor 的特化版，需用 TransformAccessArray</td>
+</tr>
+<tr>
+<td>IJobFor</td>
+<td>串行循环</td>
+<td>Execute(int index)</td>
+<td>需要Burst优化但存在数据依赖的循环</td>
+<td>不是并行的，用于Burst优化单线程循环</td>
+</tr>
+</tbody></table>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/c_1078686690062942208">Unity相关技术 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.unity.cn/cn/2022.3/Manual/job-system-jobs.html">Jobs overview - Unity 手册</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1960755007281411274"> Dots实战七 Job System的使用 - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1944344142680392088">Unity JobSystem使用手册 - 知乎</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Tech/" class="category-chain-item">Tech</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Unity/" class="print-no-link">#Unity</a>
+      
+        <a href="/tags/JobSystem/" class="print-no-link">#JobSystem</a>
+      
+        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="print-no-link">#多线程</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Job System</div>
+      <div>http://example.com/2025/11/25/Job System/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Beitragsautor</div>
+          <div>MKY42</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Veröffentlicht am</div>
+          <div>November 25, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Urheberrechtshinweis</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/03/24/ComputeShader/" title="Unity Compute Shader">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Unity Compute Shader</span>
+                        <span class="visible-mobile">Vorheriger</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/10/Addressables/" title="Unity的Addressables">
+                        <span class="hidden-mobile">Unity的Addressables</span>
+                        <span class="visible-mobile">Nächster</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Inhaltsverzeichnis</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Suchen</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Stichwort</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog funktioniert am besten mit aktiviertem JavaScript</div>
+  </noscript>
+</body>
+</html>
