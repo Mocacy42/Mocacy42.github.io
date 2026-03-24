@@ -103,4 +103,5 @@ theme: fluid
 deploy:
   type: git
   reop: https://github.com/Mocacy42/Mocacy42.github.io.git 
-  branch: main
+  branch: gh-pages
+  message: Deployment
