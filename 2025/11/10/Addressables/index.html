@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html lang="zh" data-default-color-scheme=auto>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
@@ -22,16 +22,16 @@
     <meta name="description" content="Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234&#x2F;&#x2F; 加载资源GameObject prefab &#x3D; Resources.Load&lt;GameObject&gt;(&quot;Characters&#x2F;MyCharacter&quot;);&#x2F;&#x2F; 卸载资源Resour">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Unity的Addressables">
-<meta property="og:url" content="http://example.com/2025/11/10/Addressables/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://mocacy42.github.io/2025/11/10/Addressables/index.html">
+<meta property="og:site_name" content="MKY42">
 <meta property="og:description" content="Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234&#x2F;&#x2F; 加载资源GameObject prefab &#x3D; Resources.Load&lt;GameObject&gt;(&quot;Characters&#x2F;MyCharacter&quot;);&#x2F;&#x2F; 卸载资源Resour">
-<meta property="og:locale">
-<meta property="og:image" content="http://example.com/img/Addressables/AddressableAssetSettings.png">
-<meta property="og:image" content="http://example.com/img/Addressables/ContentPacking&Loading.png">
-<meta property="og:image" content="http://example.com/img/Addressables/AdvancedOptions.png">
-<meta property="og:image" content="http://example.com/img/Addressables/ContentUpdateRestrictionSchemaReference.png">
-<meta property="og:image" content="http://example.com/img/Addressables/ProfileWindow.png">
-<meta property="og:image" content="http://example.com/img/Addressables/ReferenceMultipleImplicitAsset.png">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mocacy42.github.io/img/Addressables/AddressableAssetSettings.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ContentPacking&Loading.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/Addressables/AdvancedOptions.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ContentUpdateRestrictionSchemaReference.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ProfileWindow.png">
+<meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ReferenceMultipleImplicitAsset.png">
 <meta property="article:published_time" content="2025-11-09T17:52:00.000Z">
 <meta property="article:modified_time" content="2026-03-24T05:23:03.942Z">
 <meta property="article:author" content="MKY42">
@@ -39,11 +39,11 @@
 <meta property="article:tag" content="Unity">
 <meta property="article:tag" content="动态资源管理">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/Addressables/AddressableAssetSettings.png">
+<meta name="twitter:image" content="https://mocacy42.github.io/img/Addressables/AddressableAssetSettings.png">
   
   
   
-  <title>Unity的Addressables - Hexo</title>
+  <title>Unity的Addressables - MKY42</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -81,7 +81,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"mocacy42.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -127,7 +127,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
-                <span>Home</span>
+                <span>首页</span>
               </a>
             </li>
           
@@ -139,7 +139,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
-                <span>Archives</span>
+                <span>归档</span>
               </a>
             </li>
           
@@ -151,7 +151,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
-                <span>Categories</span>
+                <span>分类</span>
               </a>
             </li>
           
@@ -163,7 +163,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
-                <span>Tags</span>
+                <span>标签</span>
               </a>
             </li>
           
@@ -175,7 +175,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
-                <span>About</span>
+                <span>关于</span>
               </a>
             </li>
           
@@ -214,7 +214,7 @@
               <a href="/" target="_self">
                 <div class="mobile-grid-item">
                   <i class="iconfont icon-home-fill"></i>
-                  <span>Home</span>
+                  <span>首页</span>
                 </div>
               </a>
             </div>
@@ -228,7 +228,7 @@
               <a href="/archives/" target="_self">
                 <div class="mobile-grid-item">
                   <i class="iconfont icon-archive-fill"></i>
-                  <span>Archives</span>
+                  <span>归档</span>
                 </div>
               </a>
             </div>
@@ -242,7 +242,7 @@
               <a href="/categories/" target="_self">
                 <div class="mobile-grid-item">
                   <i class="iconfont icon-category-fill"></i>
-                  <span>Categories</span>
+                  <span>分类</span>
                 </div>
               </a>
             </div>
@@ -256,7 +256,7 @@
               <a href="/tags/" target="_self">
                 <div class="mobile-grid-item">
                   <i class="iconfont icon-tags-fill"></i>
-                  <span>Tags</span>
+                  <span>标签</span>
                 </div>
               </a>
             </div>
@@ -270,7 +270,7 @@
               <a href="/about/" target="_self">
                 <div class="mobile-grid-item">
                   <i class="iconfont icon-user-fill"></i>
-                  <span>About</span>
+                  <span>关于</span>
                 </div>
               </a>
             </div>
@@ -281,19 +281,19 @@
             <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
               <div class="mobile-grid-item">
                 <i class="iconfont icon-search"></i>
-                <span>Search</span>
+                <span>搜索</span>
               </div>
             </a>
           </div>
         
         
           <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
-               data-label-light="Light"
-               data-label-dark="Dark">
+               data-label-light="开灯"
+               data-label-dark="关灯">
             <a href="javascript:;" aria-label="Color Toggle">
               <div class="mobile-grid-item">
                 <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
-                <span id="mobile-color-toggle-label">Dark</span>
+                <span id="mobile-color-toggle-label">关灯</span>
               </div>
             </a>
           </div>
@@ -324,7 +324,7 @@
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
         <time datetime="2025-11-10 01:52" pubdate>
-          November 10, 2025 am
+          2025年11月10日 凌晨
         </time>
       </span>
     
@@ -335,7 +335,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          28k words
+          28k 字
         
       </span>
     
@@ -346,7 +346,7 @@
         
         
         
-          237 mins
+          237 分钟
         
       </span>
     
@@ -382,7 +382,7 @@
     <div id="toc">
   <p class="toc-header">
     <i class="iconfont icon-list"></i>
-    <span>Table of Contents</span>
+    <span>目录</span>
   </p>
   <div class="toc-body" id="toc-body"></div>
 </div>
@@ -866,31 +866,31 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Unity的Addressables</div>
-      <div>http://example.com/2025/11/10/Addressables/</div>
+      <div>https://mocacy42.github.io/2025/11/10/Addressables/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
-          <div>Author</div>
+          <div>作者</div>
           <div>MKY42</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
-          <div>Posted on</div>
-          <div>November 10, 2025</div>
+          <div>发布于</div>
+          <div>2025年11月10日</div>
         </div>
       
       
       
         <div class="license-meta-item">
-          <div>Licensed under</div>
+          <div>许可协议</div>
           <div>
             
               
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
                     <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
@@ -913,7 +913,7 @@
                       <a href="/2025/11/25/Job%20System/" title="Job System">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Job System</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
@@ -989,7 +989,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -997,7 +997,7 @@
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -1239,7 +1239,7 @@
   
 
   <noscript>
-    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
 </body>
 </html>
