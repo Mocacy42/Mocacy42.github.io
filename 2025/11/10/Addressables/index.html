@@ -19,12 +19,12 @@
   <meta name="author" content="MKY42">
   <meta name="keywords" content="">
   
-    <meta name="description" content="title: Unity的Addressablesdate: 2025-11-10 1:52:00tags: [Unity, Addressables, 动态资源管理]categories: [Tech, Unity]toc: truecomments: trueAddressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Res">
+    <meta name="description" content="Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234&#x2F;&#x2F; 加载资源GameObject prefab &#x3D; Resources.Load&lt;GameObject&gt;(&quot;Characters&#x2F;MyCharacter&quot;);&#x2F;&#x2F; 卸载资源Resour">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Addressables">
-<meta property="og:url" content="https://mocacy42.github.io/2026/03/24/Addressables/index.html">
+<meta property="og:title" content="Unity的Addressables">
+<meta property="og:url" content="https://mocacy42.github.io/2025/11/10/Addressables/index.html">
 <meta property="og:site_name" content="MKY42">
-<meta property="og:description" content="title: Unity的Addressablesdate: 2025-11-10 1:52:00tags: [Unity, Addressables, 动态资源管理]categories: [Tech, Unity]toc: truecomments: trueAddressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Res">
+<meta property="og:description" content="Addressables可寻址资源管理系统1. 传统资源管理方式Resouces传统的资源加载方式一般通过将资源放置在一个特殊的Resource文件夹中，使用如下方式使用： 1234&#x2F;&#x2F; 加载资源GameObject prefab &#x3D; Resources.Load&lt;GameObject&gt;(&quot;Characters&#x2F;MyCharacter&quot;);&#x2F;&#x2F; 卸载资源Resour">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mocacy42.github.io/img/Addressables/AddressableAssetSettings.png">
 <meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ContentPacking&Loading.png">
@@ -32,16 +32,18 @@
 <meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ContentUpdateRestrictionSchemaReference.png">
 <meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ProfileWindow.png">
 <meta property="og:image" content="https://mocacy42.github.io/img/Addressables/ReferenceMultipleImplicitAsset.png">
-<meta property="article:published_time" content="2026-03-23T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-24T06:44:36.500Z">
+<meta property="article:published_time" content="2025-11-09T17:52:00.000Z">
+<meta property="article:modified_time" content="2026-03-24T06:49:06.031Z">
 <meta property="article:author" content="MKY42">
+<meta property="article:tag" content="Addressables">
 <meta property="article:tag" content="Unity">
+<meta property="article:tag" content="动态资源管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://mocacy42.github.io/img/Addressables/AddressableAssetSettings.png">
   
   
   
-  <title>Addressables - MKY42</title>
+  <title>Unity的Addressables - MKY42</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -310,7 +312,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Addressables"></span>
+            <span id="subtitle" data-typed-text="Unity的Addressables"></span>
           
         </div>
 
@@ -321,8 +323,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-03-24 00:00" pubdate>
-          2026年3月24日 凌晨
+        <time datetime="2025-11-10 01:52" pubdate>
+          2025年11月10日 凌晨
         </time>
       </span>
     
@@ -344,7 +346,7 @@
         
         
         
-          238 分钟
+          237 分钟
         
       </span>
     
@@ -396,13 +398,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Addressables</h1>
+            <h1 id="seo-header">Unity的Addressables</h1>
             
             
               <div class="markdown-body">
                 
-                <hr>
-<h2 id="title-Unity的Addressablesdate-2025-11-10-1-52-00tags-Unity-Addressables-动态资源管理-categories-Tech-Unity-toc-truecomments-true"><a href="#title-Unity的Addressablesdate-2025-11-10-1-52-00tags-Unity-Addressables-动态资源管理-categories-Tech-Unity-toc-truecomments-true" class="headerlink" title="title: Unity的Addressablesdate: 2025-11-10 1:52:00tags: [Unity, Addressables, 动态资源管理]categories: [Tech, Unity]toc: truecomments: true"></a>title: Unity的Addressables<br>date: 2025-11-10 1:52:00<br>tags: [Unity, Addressables, 动态资源管理]<br>categories: [Tech, Unity]<br>toc: true<br>comments: true</h2><h1 id="Addressables可寻址资源管理系统"><a href="#Addressables可寻址资源管理系统" class="headerlink" title="Addressables可寻址资源管理系统"></a>Addressables可寻址资源管理系统</h1><h2 id="1-传统资源管理方式Resouces"><a href="#1-传统资源管理方式Resouces" class="headerlink" title="1. 传统资源管理方式Resouces"></a>1. 传统资源管理方式<code>Resouces</code></h2><p>传统的资源加载方式一般通过将资源放置在一个特殊的<code>Resource</code>文件夹中，使用如下方式使用：</p>
+                <h1 id="Addressables可寻址资源管理系统"><a href="#Addressables可寻址资源管理系统" class="headerlink" title="Addressables可寻址资源管理系统"></a>Addressables可寻址资源管理系统</h1><h2 id="1-传统资源管理方式Resouces"><a href="#1-传统资源管理方式Resouces" class="headerlink" title="1. 传统资源管理方式Resouces"></a>1. 传统资源管理方式<code>Resouces</code></h2><p>传统的资源加载方式一般通过将资源放置在一个特殊的<code>Resource</code>文件夹中，使用如下方式使用：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C#"><span class="hljs-comment">// 加载资源</span><br>GameObject prefab = Resources.Load&lt;GameObject&gt;(<span class="hljs-string">&quot;Characters/MyCharacter&quot;</span>);<br><span class="hljs-comment">// 卸载资源</span><br>Resources.UnloadAsset(prefab);<br></code></pre></td></tr></table></figure>
 
 <p>使用<code>Resources</code>方式管理资源有几点缺点：</p>
@@ -829,6 +830,13 @@
   <a href="/categories/Tech/" class="category-chain-item">Tech</a>
   
   
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
 
       </span>
     
@@ -843,6 +851,10 @@
       
         <a href="/tags/Unity/" class="print-no-link">#Unity</a>
       
+        <a href="/tags/Addressables/" class="print-no-link">#Addressables</a>
+      
+        <a href="/tags/%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" class="print-no-link">#动态资源管理</a>
+      
     </div>
   
 </div>
@@ -853,8 +865,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Addressables</div>
-      <div>https://mocacy42.github.io/2026/03/24/Addressables/</div>
+      <div>Unity的Addressables</div>
+      <div>https://mocacy42.github.io/2025/11/10/Addressables/</div>
     </div>
     <div class="license-meta">
       
@@ -866,7 +878,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年3月24日</div>
+          <div>2025年11月10日</div>
         </div>
       
       
@@ -898,7 +910,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/03/24/Job%20System/" title="Job System">
+                      <a href="/2025/11/25/Job%20System/" title="Job System">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Job System</span>
                         <span class="visible-mobile">上一篇</span>
@@ -907,12 +919,6 @@
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2026/03/24/PBR/" title="PBR">
-                        <span class="hidden-mobile">PBR</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>

@@ -19,17 +19,19 @@
   <meta name="author" content="MKY42">
   <meta name="keywords" content="">
   
-    <meta name="description" content="title: Job Systemdate: 2025-11-25 15:27:00tags: [Unity, JobSystem, 多线程]categories: [Tech, Unity]toc: truecomments: trueJob SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与">
+    <meta name="description" content="Job SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。 核心思想其核心思想就是将每个任务做成一个 Struct ，让其实现 IJob,IJobParallelFor等接口，其中仅包含数据和对数据的处理逻辑而无引">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Job System">
-<meta property="og:url" content="https://mocacy42.github.io/2026/03/24/Job%20System/index.html">
+<meta property="og:url" content="https://mocacy42.github.io/2025/11/25/Job%20System/index.html">
 <meta property="og:site_name" content="MKY42">
-<meta property="og:description" content="title: Job Systemdate: 2025-11-25 15:27:00tags: [Unity, JobSystem, 多线程]categories: [Tech, Unity]toc: truecomments: trueJob SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与">
+<meta property="og:description" content="Job SystemJob System 介绍Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。 核心思想其核心思想就是将每个任务做成一个 Struct ，让其实现 IJob,IJobParallelFor等接口，其中仅包含数据和对数据的处理逻辑而无引">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-03-23T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-24T06:44:36.516Z">
+<meta property="article:published_time" content="2025-11-25T07:27:00.000Z">
+<meta property="article:modified_time" content="2026-03-24T06:49:00.568Z">
 <meta property="article:author" content="MKY42">
+<meta property="article:tag" content="JobSystem">
 <meta property="article:tag" content="Unity">
+<meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -314,8 +316,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-03-24 00:00" pubdate>
-          2026年3月24日 凌晨
+        <time datetime="2025-11-25 15:27" pubdate>
+          2025年11月25日 下午
         </time>
       </span>
     
@@ -326,7 +328,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.8k 字
+          4.7k 字
         
       </span>
     
@@ -337,7 +339,7 @@
         
         
         
-          40 分钟
+          39 分钟
         
       </span>
     
@@ -394,8 +396,7 @@
             
               <div class="markdown-body">
                 
-                <hr>
-<h2 id="title-Job-Systemdate-2025-11-25-15-27-00tags-Unity-JobSystem-多线程-categories-Tech-Unity-toc-truecomments-true"><a href="#title-Job-Systemdate-2025-11-25-15-27-00tags-Unity-JobSystem-多线程-categories-Tech-Unity-toc-truecomments-true" class="headerlink" title="title: Job Systemdate: 2025-11-25 15:27:00tags: [Unity, JobSystem, 多线程]categories: [Tech, Unity]toc: truecomments: true"></a>title: Job System<br>date: 2025-11-25 15:27:00<br>tags: [Unity, JobSystem, 多线程]<br>categories: [Tech, Unity]<br>toc: true<br>comments: true</h2><h1 id="Job-System"><a href="#Job-System" class="headerlink" title="Job System"></a>Job System</h1><h2 id="Job-System-介绍"><a href="#Job-System-介绍" class="headerlink" title="Job System 介绍"></a>Job System 介绍</h2><p>Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。</p>
+                <h1 id="Job-System"><a href="#Job-System" class="headerlink" title="Job System"></a>Job System</h1><h2 id="Job-System-介绍"><a href="#Job-System-介绍" class="headerlink" title="Job System 介绍"></a>Job System 介绍</h2><p>Unity 的 Job System 是多线程任务调度框架，让开发者可以只用 C# 写出安全高效的多线程代码，并与 Unity 引擎内部的原生作业系统共享线程池，避免创建过多线程导致 CPU 争用。</p>
 <h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>其核心思想就是将每个任务做成一个 Struct ，让其实现 <code>IJob</code>,<code>IJobParallelFor</code>等接口，其中仅包含数据和对数据的处理逻辑而无引用类型。<br>在主线程中调用 <code>Schedule()</code>将 Job 推入队列，将 Job 分发给子线程，并使用<code>Complete()</code>等待 Job完成。</p>
 <h3 id="安全性系统"><a href="#安全性系统" class="headerlink" title="安全性系统"></a>安全性系统</h3><p>为了避免子线程对主线程内容操作从而造成竞争，Job System 会采用数据拷贝的方式提供子线程数据，即：Job 中操作的数据都是主线程中数据的拷贝而非引用。</p>
 <p>这样的方式也导致 Job 只能访问可位块传输的数据类型( Blittable data type )。<br>基本类型：</p>
@@ -531,6 +532,13 @@
   <a href="/categories/Tech/" class="category-chain-item">Tech</a>
   
   
+    <span>></span>
+    
+  <a href="/categories/Tech/Unity/" class="category-chain-item">Unity</a>
+  
+  
+
+  
 
       </span>
     
@@ -545,6 +553,10 @@
       
         <a href="/tags/Unity/" class="print-no-link">#Unity</a>
       
+        <a href="/tags/JobSystem/" class="print-no-link">#JobSystem</a>
+      
+        <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="print-no-link">#多线程</a>
+      
     </div>
   
 </div>
@@ -556,7 +568,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Job System</div>
-      <div>https://mocacy42.github.io/2026/03/24/Job System/</div>
+      <div>https://mocacy42.github.io/2025/11/25/Job System/</div>
     </div>
     <div class="license-meta">
       
@@ -568,7 +580,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年3月24日</div>
+          <div>2025年11月25日</div>
         </div>
       
       
@@ -600,9 +612,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/03/24/ComputeShader/" title="ComputeShader">
+                      <a href="/2026/03/24/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="软件设计模式">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ComputeShader</span>
+                        <span class="hidden-mobile">软件设计模式</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -610,8 +622,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/03/24/Addressables/" title="Addressables">
-                        <span class="hidden-mobile">Addressables</span>
+                      <a href="/2025/11/10/Addressables/" title="Unity的Addressables">
+                        <span class="hidden-mobile">Unity的Addressables</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
