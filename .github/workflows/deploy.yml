@@ -15,6 +15,12 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Setup Submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v3
         with:
