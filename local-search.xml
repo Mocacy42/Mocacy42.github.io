@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>进程调度方法</title>
+    <link href="/2026/03/31/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E6%96%B9%E6%B3%95/"/>
+    <url>/2026/03/31/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E6%96%B9%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<h2 id="作业调度"><a href="#作业调度" class="headerlink" title="作业调度"></a>作业调度</h2><h3 id="先来先服务（first-come-first-served-FCFS）"><a href="#先来先服务（first-come-first-served-FCFS）" class="headerlink" title="先来先服务（first-come first-served FCFS）"></a>先来先服务（first-come first-served FCFS）</h3><p>选择最先进入就绪队列的进程执行，即：按请求CPU的顺序使用CPU。</p><pre><code class=" mermaid">gantt    title timeline    dateFormat x    axisFormat %d    section 进程调度    A: a1, 0,3d    B: a2,after a1,5d    C: a3 , after a2, 7d    D: a4, after a3, 4d    E: a5, after a4, 2d</code></pre><h3 id="短作业优先（short-job-first-SJF）"><a href="#短作业优先（short-job-first-SJF）" class="headerlink" title="短作业优先（short job first SJF）"></a>短作业优先（short job first SJF）</h3><p>根据作业长短计算优先级，作业越短，优先级越高。<br>SJF具有明显缺点：</p><ul><li>必须知道作业时间</li><li>长作业周转时间明显增长。</li><li>未考虑紧迫作业需求</li></ul><h3 id="优先级调度算法（priority-scheduling-algorithm-PSA）"><a href="#优先级调度算法（priority-scheduling-algorithm-PSA）" class="headerlink" title="优先级调度算法（priority-scheduling algorithm PSA）"></a>优先级调度算法（priority-scheduling algorithm PSA）</h3><p>基于作业的紧迫成都，由外部赋予作业优先级，优先保证紧迫性作业执行。</p><h3 id="高响应比优先调度算法（Highest-Response-Ratio-Next-HRRN）"><a href="#高响应比优先调度算法（Highest-Response-Ratio-Next-HRRN）" class="headerlink" title="高响应比优先调度算法（Highest Response Ratio Next HRRN）"></a>高响应比优先调度算法（Highest Response Ratio Next HRRN）</h3><p>为每个作业引入动态优先级，</p><p>$优先权 &#x3D; \frac{等待时间 + 要求服务时间}{要求服务时间}$</p><p>由于等待时间和要求服务时间之和就是作业响应时间，影刺该优先级相当于响应比$R_p$</p><p>$R_p &#x3D; \frac{等待时间 + 要求服务时间}{要求服务时间}&#x3D; \frac{响应时间}{要求服务时间}$</p><p>HRRN的优点是既考虑作业等待时间，也考虑作业运行时间，同时照顾短时作业和长时作业。<br>缺点是每次调度前需要计算优先级增加开销。</p><h2 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2><h3 id="进程调度流程"><a href="#进程调度流程" class="headerlink" title="进程调度流程"></a>进程调度流程</h3><ul><li>保存处理机现场信息：程序计数器、寄存器内容等。</li><li>按照算法选取进程。</li><li>分配CPU。</li></ul><h3 id="进程调度机制的实现"><a href="#进程调度机制的实现" class="headerlink" title="进程调度机制的实现"></a>进程调度机制的实现</h3><h4 id="排队器"><a href="#排队器" class="headerlink" title="排队器"></a>排队器</h4><p>事先将所有就绪进程按照一定策略排成一个或多个队列，便于调度。</p><h4 id="分派器"><a href="#分派器" class="headerlink" title="分派器"></a>分派器</h4><p>根据进程调度程序选定的进程，从就绪队列中取出，进行上下文切换，分配CPU给新进程。</p><h4 id="上下文切换器"><a href="#上下文切换器" class="headerlink" title="上下文切换器"></a>上下文切换器</h4><p>对处理器进行上下文切换时，会发生两对上下文切换：</p><ul><li>OS保存当前进程上下文，装入分派程序上下文，以便分派程序运行。</li><li>移出分派程序上下文，把新选进程CPU现场信息装入CPU，以便新选进程运行。<br>上下文切换需要执行大量load和store指令，通常耗费大量时间，不过可以通过类似双重帧缓冲的方式，使用两组寄存器组，使用时切换指针即可。</li></ul><h3 id="进程调度方式分类"><a href="#进程调度方式分类" class="headerlink" title="进程调度方式分类"></a>进程调度方式分类</h3><h4 id="非抢占方式"><a href="#非抢占方式" class="headerlink" title="非抢占方式"></a>非抢占方式</h4><p>一旦调度，一直运行，拒绝抢占，直至进程完成或者阻塞。<br>采用非抢占方式时，可能引起进程调度的原因有：</p><ul><li>正在执行的进程运行完毕或者因为某事件无法运行。</li><li>执行进程提出IO请求暂停。</li><li>进程通信或同步过程中，执行原语操作。</li></ul><h4 id="抢占方式"><a href="#抢占方式" class="headerlink" title="抢占方式"></a>抢占方式</h4><p>允许调度程序根据某种原则，暂停当前进程，并将已分配的CPU分配给其他进程，防止某一进程长时间占用CPU。<br>抢占原则：</p><ul><li>优先权原则：允许优先级高进程抢占当前进程。</li><li>短进程原则：允许短进程抢占长进程。</li><li>时间片原则：各进程时间片轮转运行时，时间片用完则停止进程执行并重新调度。</li></ul><h3 id="轮转调度算法-RR"><a href="#轮转调度算法-RR" class="headerlink" title="轮转调度算法 RR"></a>轮转调度算法 RR</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><ul><li>将所有就绪进程按照 FCFS 策略排成就绪队列。</li><li>周期中断，激活调度程序。</li><li>CPU分配给队首进程，执行一个时间片。</li></ul><h4 id="切换时机"><a href="#切换时机" class="headerlink" title="切换时机"></a>切换时机</h4><ul><li>时间片结束前 进程完成：立即激活调度程序，将进程从就绪队列删除，再调度。</li><li>时间片结束后 进程未完成：中断处理激活，将进程送入队尾。</li></ul><h4 id="时间片大小"><a href="#时间片大小" class="headerlink" title="时间片大小"></a>时间片大小</h4><p>时间片大小会对性能产生很大影响，时间片过长，退化为 FCFS，时间片过短，频繁中断和上下文切换增加开销。</p><h3 id="优先级调度算法"><a href="#优先级调度算法" class="headerlink" title="优先级调度算法"></a>优先级调度算法</h3><p>根据紧迫性需求，需要引入优先级。</p><h4 id="算法类型"><a href="#算法类型" class="headerlink" title="算法类型"></a>算法类型</h4><ul><li>抢占式</li><li>非抢占式</li></ul><h4 id="优先级类型"><a href="#优先级类型" class="headerlink" title="优先级类型"></a>优先级类型</h4><ul><li>静态优先级：根据进程类型、进程需求资源、用户需求 在进程创建时确定。</li><li>动态优先级：创建时赋予优先级，随进程推进或等待改变。</li></ul><h3 id="多队列调度算法"><a href="#多队列调度算法" class="headerlink" title="多队列调度算法"></a>多队列调度算法</h3>]]></content>
+    
+    
+    <categories>
+      
+      <category>Tech</category>
+      
+      <category>CS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>操作系统</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Unity Compute Shader</title>
     <link href="/2026/03/24/ComputeShader/"/>
     <url>/2026/03/24/ComputeShader/</url>
